@@ -23,7 +23,7 @@
 </head>
 <body class="min-h-screen bg-slate-950 text-slate-100">
   <header class="sticky top-0 z-30 border-b border-slate-800 bg-slate-900/90 px-4 py-4 backdrop-blur sm:px-8">
-    <div class="mx-auto max-w-7xl">
+    <div class="mx-auto max-w-screen-2xl">
       <h1 class="bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400 bg-clip-text text-xl font-bold text-transparent sm:text-2xl">Trabajo Práctico 1</h1>
       <p class="text-xs text-slate-400 sm:text-sm">Análisis de compras con tarjeta de crédito (agosto de 2025 – agosto de 2026)</p>
       <p class="mt-1 text-xs font-medium text-slate-300 sm:text-sm">Alumno: Diego Hernán Giarletta</p>
@@ -31,13 +31,13 @@
     </div>
   </header>
 
-  <main class="mx-auto w-full max-w-7xl space-y-6 p-4 sm:p-6 lg:p-8">
+  <main class="mx-auto w-full max-w-screen-2xl space-y-6 p-4 sm:p-6 lg:p-8">
     <section aria-labelledby="raw-graph-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
       <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
         <h2 id="raw-graph-title" class="text-lg font-bold text-slate-200 sm:text-xl">Gráfico de transacciones</h2>
         <button type="button" onclick="document.getElementById('raw-graph-dialog').showModal()" aria-haspopup="dialog" aria-controls="raw-graph-dialog" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:bg-slate-700">Maximizar gráfico</button>
       </div>
-      <img src="./Diego-RawGraphData.svg" alt="Gráfico de datos originales de transacciones con tarjeta" class="mx-auto block h-auto max-h-[34rem] w-full max-w-6xl object-contain">
+      <img src="./Diego-RawGraphData.svg" alt="Gráfico de datos originales de transacciones con tarjeta" class="mx-auto block h-auto max-h-[42rem] w-full max-w-full object-contain">
     </section>
 
     <dialog id="raw-graph-dialog" aria-labelledby="raw-graph-dialog-title" class="rounded-2xl border border-slate-700 bg-slate-900 p-4 text-slate-100 shadow-2xl sm:p-6">
