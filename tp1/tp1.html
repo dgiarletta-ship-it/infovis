@@ -1,13 +1,300 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Visualización</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard de gastos — Diego e Ivanna</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .stream-path { cursor: pointer; transition: opacity .25s ease, filter .25s ease; }
+    .stream-path:hover { filter: brightness(1.15); }
+    #tooltip { pointer-events: none; transition: opacity .15s ease; }
+    .chart-area { height: 20rem; }
+    @media (max-width: 640px) { .chart-area { height: 17rem; } }
+  </style>
 </head>
-<body>
+<body class="min-h-screen bg-slate-950 text-slate-100">
+  <header class="sticky top-0 z-30 border-b border-slate-800 bg-slate-900/90 px-4 py-4 backdrop-blur sm:px-8">
+    <div class="mx-auto flex max-w-7xl flex-col justify-between gap-4 md:flex-row md:items-center">
+      <div>
+        <h1 class="bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400 bg-clip-text text-xl font-bold text-transparent sm:text-2xl">Dashboard de Gastos — Diego e Ivanna</h1>
+        <p class="text-xs text-slate-400 sm:text-sm">Evolución mensual por categoría • Importes de la planilla en miles, sin etiquetas numéricas</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900 p-1.5">
+          <button id="btn-all" onclick="setViewMode('all')" class="view-btn rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white">Consolidado + separados</button>
+          <button id="btn-consolidated" onclick="setViewMode('consolidated')" class="view-btn rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-400">Solo consolidado</button>
+          <button id="btn-diego" onclick="setViewMode('diego')" class="view-btn rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-400">Solo Diego</button>
+          <button id="btn-ivanna" onclick="setViewMode('ivanna')" class="view-btn rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-400">Solo Ivanna</button>
+        </div>
+        <button onclick="downloadCSVData()" class="flex items-center gap-2 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-emerald-500">Exportar CSV</button>
+      </div>
+    </div>
+  </header>
 
-<div class="flourish-embed flourish-chart" data-src="visualisation/30911725"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/30911725/thumbnail" width="100%" alt="chart visualization" /></noscript></div>
-    
+  <main class="mx-auto w-full max-w-7xl space-y-6 p-4 sm:p-6 lg:p-8">
+    <p id="dataset-status" role="status" class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-sm text-slate-300">Cargando datos de la planilla…</p>
+    <div id="selection-card" class="flex flex-col items-start justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg sm:flex-row sm:items-center">
+      <div class="flex items-center gap-3">
+        <div id="category-color-badge" class="h-5 w-5 rounded-md bg-slate-700"></div>
+        <div>
+          <span class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Categoría seleccionada</span>
+          <span id="selected-category-name" class="text-base font-semibold sm:text-lg">Haz clic en cualquier banda para fijar la categoría</span>
+        </div>
+      </div>
+      <button id="reset-selection-btn" onclick="clearSelection()" class="hidden rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-200">Restablecer selección</button>
+    </div>
+
+    <div id="charts-wrapper" class="space-y-6">
+      <section id="card-consolidated" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
+        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-base font-bold text-slate-200 sm:text-lg">STREAMGRAPH CONSOLIDADO — DIEGO + IVANNA</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs text-slate-400">Visión global</span></div>
+        <div id="chart-consolidated" class="chart-area relative w-full"></div>
+      </section>
+      <section id="card-diego" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
+        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-base font-bold text-slate-200 sm:text-lg">STREAMGRAPH — DIEGO H. GIARLETTA</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs text-slate-400">Titular</span></div>
+        <div id="chart-diego" class="chart-area relative w-full"></div>
+      </section>
+      <section id="card-ivanna" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
+        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-base font-bold text-slate-200 sm:text-lg">STREAMGRAPH — IVANNA (SONIA I. GERONOVYCZ)</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs text-slate-400">Titular</span></div>
+        <div id="chart-ivanna" class="chart-area relative w-full"></div>
+      </section>
+    </div>
+
+    <section class="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6">
+      <h2 class="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">Leyenda unificada de categorías</h2>
+      <div id="legend-container" class="flex flex-wrap gap-2 text-xs"></div>
+    </section>
+
+    <section class="space-y-3 rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
+      <div>
+        <h2 class="text-lg font-bold text-slate-200">Visualización original de Flourish</h2>
+        <p class="text-sm text-slate-400">Se conserva la visualización que ya estaba en tp1.html.</p>
+      </div>
+      <div class="flourish-embed flourish-chart" data-src="visualisation/30911725"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/30911725/thumbnail" width="100%" alt="Visualización de Flourish" /></noscript></div>
+    </section>
+  </main>
+
+  <div id="tooltip" class="fixed z-50 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-700 bg-slate-900/95 p-3 text-xs text-slate-100 opacity-0 shadow-2xl backdrop-blur-md">
+    <div class="mb-1 flex items-center gap-2"><span id="tt-color" class="inline-block h-3 w-3 rounded-full"></span><span id="tt-category" class="text-sm font-bold text-white"></span></div>
+    <div id="tt-period" class="text-slate-400"></div>
+    <div class="mt-1 text-[11px] italic text-slate-400">Haz clic para seleccionar</div>
+  </div>
+
+  <script>
+    const workbookUrl = './gastosdetarjetamensual_Final.xlsx';
+    const categoryColors = d3.scaleOrdinal(d3.schemeTableau10);
+    const numberFormat = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 2 });
+    let periods = [];
+    let categories = [];
+    let records = [];
+    let chartData = {};
+    let viewMode = 'all';
+    let selectedCategory = null;
+
+    function normalizeText(value) {
+      return String(value ?? '').normalize('NFC').trim().replace(/\s+/g, ' ');
+    }
+
+    function monthOrder(period) {
+      const [month, year] = period.split('/').map(Number);
+      return year * 12 + month;
+    }
+
+    function ownerFromCell(value) {
+      const owner = normalizeText(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+      if (owner.includes('GIARLETTA') || owner.includes('DIEGO')) return 'diego';
+      if (owner.includes('GERONOVYCZ') || owner.includes('SONIA')) return 'ivanna';
+      throw new Error(`Titular no reconocido en la planilla: ${value}`);
+    }
+
+    function aggregateRows(rows) {
+      const totals = new Map();
+      for (const row of rows) {
+        const key = `${row.period}\u0000${row.category}`;
+        totals.set(key, (totals.get(key) || 0) + Math.abs(row.amount));
+      }
+      return periods.map(period => {
+        const result = { period };
+        for (const category of categories) result[category] = totals.get(`${period}\u0000${category}`) || 0;
+        return result;
+      });
+    }
+
+    async function loadWorkbook() {
+      const status = document.getElementById('dataset-status');
+      try {
+        const response = await fetch(workbookUrl);
+        if (!response.ok) throw new Error(`No se pudo descargar la planilla (HTTP ${response.status}).`);
+        const workbook = XLSX.read(await response.arrayBuffer(), { type: 'array' });
+        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        if (!sheet) throw new Error('La planilla no contiene hojas con datos.');
+        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+        records = rows.slice(1).filter(row => row.some(value => value !== '')).map((row, index) => {
+          const period = normalizeText(row[0]);
+          const holder = ownerFromCell(row[2]);
+          const category = normalizeText(row[5]);
+          const amount = Number(row[6]);
+          if (!/^\d{2}\/\d{4}$/.test(period) || !category || !Number.isFinite(amount)) {
+            throw new Error(`Fila ${index + 2}: período, categoría o monto inválido.`);
+          }
+          return { period, holder, category, amount };
+        });
+        if (!records.length) throw new Error('La planilla no contiene transacciones para mostrar.');
+
+        periods = [...new Set(records.map(row => row.period))].sort((a, b) => monthOrder(a) - monthOrder(b));
+        categories = [...new Set(records.map(row => row.category))].sort((a, b) => a.localeCompare(b, 'es'));
+        categoryColors.domain(categories);
+        chartData = {
+          consolidated: aggregateRows(records),
+          diego: aggregateRows(records.filter(row => row.holder === 'diego')),
+          ivanna: aggregateRows(records.filter(row => row.holder === 'ivanna'))
+        };
+        buildLegend();
+        renderAllCharts();
+        status.textContent = `${records.length} transacciones cargadas desde la planilla (${periods[0]} – ${periods[periods.length - 1]}). Las devoluciones se representan por su magnitud; el CSV conserva los importes con su signo original.`;
+        status.className = 'rounded-xl border border-emerald-900 bg-emerald-950/60 p-3 text-sm text-emerald-200';
+      } catch (error) {
+        console.error('Error al cargar los datos de gastos:', error);
+        status.textContent = `No se pudieron cargar los datos: ${error.message}`;
+        status.className = 'rounded-xl border border-red-900 bg-red-950/60 p-3 text-sm text-red-200';
+      }
+    }
+
+    function buildLegend() {
+      const container = d3.select('#legend-container').html('');
+      categories.forEach(category => {
+        const item = container.append('button')
+          .attr('type', 'button')
+          .attr('class', 'legend-item flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1.5 transition hover:border-slate-600')
+          .attr('data-category', category)
+          .on('click', () => selectCategory(category));
+        item.append('span').attr('class', 'inline-block h-3 w-3 rounded-md').style('background-color', categoryColors(category));
+        item.append('span').attr('class', 'font-medium text-slate-300').text(category);
+      });
+    }
+
+    function renderStreamgraph(containerId, data) {
+      const container = d3.select(containerId).html('');
+      const node = container.node();
+      const width = node.clientWidth;
+      const height = node.clientHeight;
+      if (!width || !height || !data.length) return;
+      const margin = { top: 12, right: 12, bottom: 32, left: 12 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+      const series = d3.stack().keys(categories).offset(d3.stackOffsetWiggle).order(d3.stackOrderInsideOut)(data);
+      const xScale = d3.scalePoint().domain(periods).range([0, innerWidth]);
+      const yMin = d3.min(series, layer => d3.min(layer, point => point[0]));
+      const yMax = d3.max(series, layer => d3.max(layer, point => point[1]));
+      const yScale = d3.scaleLinear().domain([yMin, yMax]).range([innerHeight, 0]);
+      const area = d3.area().x(point => xScale(point.data.period)).y0(point => yScale(point[0])).y1(point => yScale(point[1])).curve(d3.curveCatmullRom.alpha(0.5));
+      const svg = container.append('svg').attr('width', width).attr('height', height).attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', 'Streamgraph de gastos por categoría y período');
+      const group = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+      group.selectAll('.stream-path').data(series).join('path')
+        .attr('class', 'stream-path').attr('d', area).attr('fill', layer => categoryColors(layer.key)).attr('data-category', layer => layer.key)
+        .style('opacity', layer => selectedCategory === null || selectedCategory === layer.key ? 0.9 : 0.12)
+        .on('mouseover', function(event, layer) {
+          showTooltip(event, layer.key);
+          if (selectedCategory === null) highlightCategory(layer.key);
+        })
+        .on('mousemove', moveTooltip)
+        .on('mouseout', () => { hideTooltip(); if (selectedCategory === null) resetCategoryHighlights(); })
+        .on('click', (event, layer) => selectCategory(layer.key));
+      const axis = group.append('g').attr('transform', `translate(0,${innerHeight + 2})`).call(d3.axisBottom(xScale).tickSize(-innerHeight).tickPadding(10));
+      axis.select('.domain').remove();
+      axis.selectAll('.tick line').attr('stroke', 'rgba(255,255,255,.08)').attr('stroke-dasharray', '3,3');
+      axis.selectAll('.tick text').attr('fill', '#94a3b8').attr('font-size', '11px').attr('font-weight', '500');
+    }
+
+    function renderAllCharts() {
+      if (!periods.length) return;
+      const visible = {
+        consolidated: viewMode === 'all' || viewMode === 'consolidated',
+        diego: viewMode === 'all' || viewMode === 'diego',
+        ivanna: viewMode === 'all' || viewMode === 'ivanna'
+      };
+      for (const name of Object.keys(visible)) {
+        document.getElementById(`card-${name}`).classList.toggle('hidden', !visible[name]);
+        if (visible[name]) renderStreamgraph(`#chart-${name}`, chartData[name]);
+      }
+    }
+
+    function selectCategory(category) {
+      if (selectedCategory === category) return clearSelection();
+      selectedCategory = category;
+      highlightCategory(category);
+      document.getElementById('selected-category-name').textContent = category;
+      document.getElementById('category-color-badge').style.backgroundColor = categoryColors(category);
+      document.getElementById('reset-selection-btn').classList.remove('hidden');
+    }
+
+    function clearSelection() {
+      selectedCategory = null;
+      resetCategoryHighlights();
+      document.getElementById('selected-category-name').textContent = 'Haz clic en cualquier banda para fijar la categoría';
+      document.getElementById('category-color-badge').style.backgroundColor = '#334155';
+      document.getElementById('reset-selection-btn').classList.add('hidden');
+    }
+
+    function highlightCategory(category) {
+      d3.selectAll('.stream-path').style('opacity', function() { return d3.select(this).attr('data-category') === category ? 1 : 0.12; });
+      d3.selectAll('.legend-item').style('opacity', function() { return d3.select(this).attr('data-category') === category ? 1 : 0.3; });
+    }
+
+    function resetCategoryHighlights() {
+      d3.selectAll('.stream-path').style('opacity', 0.9);
+      d3.selectAll('.legend-item').style('opacity', 1);
+    }
+
+    function showTooltip(event, category) {
+      d3.select('#tt-color').style('background-color', categoryColors(category));
+      d3.select('#tt-category').text(category);
+      d3.select('#tt-period').text('Período: ' + event.currentTarget.closest('svg').parentElement.id.replace('chart-', ''));
+      d3.select('#tooltip').style('opacity', 1);
+      moveTooltip(event);
+    }
+
+    function moveTooltip(event) {
+      d3.select('#tooltip').style('left', event.clientX + 'px').style('top', event.clientY + 'px');
+    }
+
+    function hideTooltip() {
+      d3.select('#tooltip').style('opacity', 0);
+    }
+
+    function setViewMode(mode) {
+      viewMode = mode;
+      document.querySelectorAll('.view-btn').forEach(button => button.className = 'view-btn rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-400 transition hover:text-white');
+      const active = document.getElementById(`btn-${mode}`);
+      active.className = 'view-btn rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm';
+      renderAllCharts();
+    }
+
+    function downloadCSVData() {
+      if (!records.length) return;
+      const quote = value => `"${String(value).replace(/"/g, '""')}"`;
+      const rows = [['Titular', 'Periodo', 'Categoria', 'Monto (miles)'], ...records.map(row => [row.holder === 'diego' ? 'Diego H. Giarletta' : 'Sonia I. Geronovycz (Ivanna)', row.period, row.category, row.amount])];
+      const csv = '\uFEFF' + rows.map(row => row.map(quote).join(',')).join('\r\n');
+      const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'gastos_diego_ivanna.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderAllCharts, 150);
+    });
+    loadWorkbook();
+  </script>
 </body>
 </html>
