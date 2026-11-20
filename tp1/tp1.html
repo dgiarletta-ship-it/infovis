@@ -32,9 +32,7 @@
       </div>
       <div class="flex flex-wrap items-center gap-3">
         <div class="flex flex-wrap items-center gap-1.5 rounded-xl border border-slate-800 bg-slate-900 p-1.5">
-          <button id="btn-all" onclick="setViewMode('all')" class="view-btn rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white">Consolidado + separados</button>
-          <button id="btn-consolidated" onclick="setViewMode('consolidated')" class="view-btn rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-400">Solo consolidado</button>
-          <button id="btn-diego" onclick="setViewMode('diego')" class="view-btn rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-400">Solo Diego</button>
+          <button id="btn-diego" onclick="setViewMode('diego')" class="view-btn rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white">Solo Diego</button>
           <button id="btn-ivanna" onclick="setViewMode('ivanna')" class="view-btn rounded-lg px-3 py-1.5 text-xs font-semibold text-slate-400">Solo Ivanna</button>
         </div>
         <button onclick="downloadCSVData()" class="flex items-center gap-2 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-emerald-500">Exportar CSV</button>
@@ -63,10 +61,6 @@
 
     <p id="dataset-status" role="status" class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-sm text-slate-300">Cargando datos de la planilla…</p>
     <div id="charts-wrapper" class="space-y-6">
-      <section id="card-consolidated" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-lg font-bold text-slate-200 sm:text-xl">STREAMGRAPH CONSOLIDADO — DIEGO + IVANNA</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-sm text-slate-400">Visión global</span></div>
-        <div id="chart-consolidated" class="chart-area relative w-full"></div>
-      </section>
       <section id="card-diego" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
         <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-lg font-bold text-slate-200 sm:text-xl">STREAMGRAPH — DIEGO H. GIARLETTA</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-sm text-slate-400">Titular</span></div>
         <div id="chart-diego" class="chart-area relative w-full"></div>
@@ -104,7 +98,7 @@
     let categories = [];
     let records = [];
     let chartData = {};
-    let viewMode = 'all';
+    let viewMode = 'diego';
     let selectedCategory = null;
 
     function normalizeText(value) {
@@ -176,7 +170,6 @@
         categories = [...new Set(records.map(row => row.category))].sort((a, b) => a.localeCompare(b, 'es'));
         categoryColors.domain(categories);
         chartData = {
-          consolidated: aggregateRows(records),
           diego: aggregateRows(records.filter(row => row.holder === 'diego')),
           ivanna: aggregateRows(records.filter(row => row.holder === 'ivanna'))
         };
@@ -239,9 +232,8 @@
     function renderAllCharts() {
       if (!periods.length) return;
       const visible = {
-        consolidated: viewMode === 'all' || viewMode === 'consolidated',
-        diego: viewMode === 'all' || viewMode === 'diego',
-        ivanna: viewMode === 'all' || viewMode === 'ivanna'
+        diego: viewMode === 'diego',
+        ivanna: viewMode === 'ivanna'
       };
       for (const name of Object.keys(visible)) {
         document.getElementById(`card-${name}`).classList.toggle('hidden', !visible[name]);
