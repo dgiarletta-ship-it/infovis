@@ -43,7 +43,7 @@
   <main class="mx-auto w-full max-w-7xl space-y-6 p-4 sm:p-6 lg:p-8">
     <section aria-labelledby="raw-graph-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
       <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <h2 id="raw-graph-title" class="text-base font-bold text-slate-200 sm:text-lg">Gráfico de transacciones</h2>
+        <h2 id="raw-graph-title" class="text-lg font-bold text-slate-200 sm:text-xl">Gráfico de transacciones</h2>
         <button type="button" onclick="document.getElementById('raw-graph-dialog').showModal()" aria-haspopup="dialog" aria-controls="raw-graph-dialog" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:bg-slate-700">Maximizar gráfico</button>
       </div>
       <img src="./Diego-RawGraphData.svg" alt="Gráfico de datos originales de transacciones con tarjeta" class="mx-auto block h-auto max-h-[34rem] w-full max-w-6xl object-contain">
@@ -51,7 +51,7 @@
 
     <dialog id="raw-graph-dialog" aria-labelledby="raw-graph-dialog-title" class="rounded-2xl border border-slate-700 bg-slate-900 p-4 text-slate-100 shadow-2xl sm:p-6">
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h2 id="raw-graph-dialog-title" class="text-lg font-bold">Gráfico de transacciones</h2>
+        <h2 id="raw-graph-dialog-title" class="text-xl font-bold">Gráfico de transacciones</h2>
         <button type="button" onclick="document.getElementById('raw-graph-dialog').close()" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm font-semibold text-slate-200 hover:bg-slate-700">Cerrar <span aria-hidden="true">×</span></button>
       </div>
       <img src="./Diego-RawGraphData.svg" alt="Gráfico ampliado de datos originales de transacciones con tarjeta" class="mx-auto block h-auto max-h-[82vh] w-full object-contain">
@@ -62,46 +62,46 @@
       <div class="flex items-center gap-3">
         <div id="category-color-badge" class="h-5 w-5 rounded-md bg-slate-700"></div>
         <div>
-          <span class="block text-xs font-semibold uppercase tracking-wider text-slate-400">Categoría seleccionada</span>
-          <span id="selected-category-name" class="text-base font-semibold sm:text-lg">Haz clic en cualquier banda para fijar la categoría</span>
+          <span class="block text-sm font-semibold uppercase tracking-wider text-slate-400">Categoría seleccionada</span>
+          <span id="selected-category-name" class="text-lg font-semibold sm:text-xl">Haz clic en cualquier banda para fijar la categoría</span>
         </div>
       </div>
-      <button id="reset-selection-btn" onclick="clearSelection()" class="hidden rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-200">Restablecer selección</button>
+      <button id="reset-selection-btn" onclick="clearSelection()" class="hidden rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-200">Restablecer selección</button>
     </div>
 
     <div id="charts-wrapper" class="space-y-6">
       <section id="card-consolidated" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-base font-bold text-slate-200 sm:text-lg">STREAMGRAPH CONSOLIDADO — DIEGO + IVANNA</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs text-slate-400">Visión global</span></div>
+        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-lg font-bold text-slate-200 sm:text-xl">STREAMGRAPH CONSOLIDADO — DIEGO + IVANNA</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-sm text-slate-400">Visión global</span></div>
         <div id="chart-consolidated" class="chart-area relative w-full"></div>
       </section>
       <section id="card-diego" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-base font-bold text-slate-200 sm:text-lg">STREAMGRAPH — DIEGO H. GIARLETTA</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs text-slate-400">Titular</span></div>
+        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-lg font-bold text-slate-200 sm:text-xl">STREAMGRAPH — DIEGO H. GIARLETTA</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-sm text-slate-400">Titular</span></div>
         <div id="chart-diego" class="chart-area relative w-full"></div>
       </section>
       <section id="card-ivanna" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-base font-bold text-slate-200 sm:text-lg">STREAMGRAPH — IVANNA (SONIA I. GERONOVYCZ)</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-xs text-slate-400">Titular</span></div>
+        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-lg font-bold text-slate-200 sm:text-xl">STREAMGRAPH — IVANNA (SONIA I. GERONOVYCZ)</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-sm text-slate-400">Titular</span></div>
         <div id="chart-ivanna" class="chart-area relative w-full"></div>
       </section>
     </div>
 
     <section class="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6">
-      <h2 class="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">Leyenda unificada de categorías</h2>
-      <div id="legend-container" class="flex flex-wrap gap-2 text-xs"></div>
+      <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-300 sm:text-base">Leyenda unificada de categorías</h2>
+      <div id="legend-container" class="flex flex-wrap gap-2 text-sm"></div>
     </section>
 
     <section class="space-y-3 rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
       <div>
-        <h2 class="text-lg font-bold text-slate-200">Visualización original de Flourish</h2>
-        <p class="text-sm text-slate-400">Se conserva la visualización que ya estaba en tp1.html.</p>
+        <h2 class="text-xl font-bold text-slate-200">Visualización original de Flourish</h2>
+        <p class="text-base text-slate-300">Se conserva la visualización que ya estaba en tp1.html.</p>
       </div>
       <div class="flourish-embed flourish-chart" data-src="visualisation/30911725"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/30911725/thumbnail" width="100%" alt="Visualización de Flourish" /></noscript></div>
     </section>
   </main>
 
-  <div id="tooltip" class="fixed z-50 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-700 bg-slate-900/95 p-3 text-xs text-slate-100 opacity-0 shadow-2xl backdrop-blur-md">
-    <div class="mb-1 flex items-center gap-2"><span id="tt-color" class="inline-block h-3 w-3 rounded-full"></span><span id="tt-category" class="text-sm font-bold text-white"></span></div>
-    <div id="tt-period" class="text-slate-400"></div>
-    <div class="mt-1 text-[11px] italic text-slate-400">Haz clic para seleccionar</div>
+  <div id="tooltip" class="fixed z-50 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-700 bg-slate-900/95 p-3 text-sm text-slate-100 opacity-0 shadow-2xl backdrop-blur-md">
+    <div class="mb-1 flex items-center gap-2"><span id="tt-color" class="inline-block h-3 w-3 rounded-full"></span><span id="tt-category" class="text-base font-bold text-white"></span></div>
+    <div id="tt-period" class="text-slate-300"></div>
+    <div class="mt-1 text-xs italic text-slate-400">Haz clic para seleccionar</div>
   </div>
 
   <script>
@@ -202,11 +202,11 @@
       categories.forEach(category => {
         const item = container.append('button')
           .attr('type', 'button')
-          .attr('class', 'legend-item flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1.5 transition hover:border-slate-600')
+          .attr('class', 'legend-item flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1.5 text-sm transition hover:border-slate-600')
           .attr('data-category', category)
           .on('click', () => selectCategory(category));
         item.append('span').attr('class', 'inline-block h-3 w-3 rounded-md').style('background-color', categoryColors(category));
-        item.append('span').attr('class', 'font-medium text-slate-300').text(category);
+        item.append('span').attr('class', 'font-medium text-slate-200').text(category);
       });
     }
 
@@ -216,7 +216,7 @@
       const width = node.clientWidth;
       const height = node.clientHeight;
       if (!width || !height || !data.length) return;
-      const margin = { top: 12, right: 12, bottom: 32, left: 12 };
+      const margin = { top: 12, right: 12, bottom: 36, left: 12 };
       const innerWidth = width - margin.left - margin.right;
       const innerHeight = height - margin.top - margin.bottom;
       const series = d3.stack().keys(categories).offset(d3.stackOffsetWiggle).order(d3.stackOrderInsideOut)(data);
@@ -237,10 +237,10 @@
         .on('mousemove', moveTooltip)
         .on('mouseout', () => { hideTooltip(); if (selectedCategory === null) resetCategoryHighlights(); })
         .on('click', (event, layer) => selectCategory(layer.key));
-      const axis = group.append('g').attr('transform', `translate(0,${innerHeight + 2})`).call(d3.axisBottom(xScale).tickSize(-innerHeight).tickPadding(10));
+      const axis = group.append('g').attr('transform', `translate(0,${innerHeight + 2})`).call(d3.axisBottom(xScale).tickSize(-innerHeight).tickPadding(12));
       axis.select('.domain').remove();
       axis.selectAll('.tick line').attr('stroke', 'rgba(255,255,255,.08)').attr('stroke-dasharray', '3,3');
-      axis.selectAll('.tick text').attr('fill', '#94a3b8').attr('font-size', '11px').attr('font-weight', '500');
+      axis.selectAll('.tick text').attr('fill', '#cbd5e1').attr('font-size', '14px').attr('font-weight', '500');
     }
 
     function renderAllCharts() {
