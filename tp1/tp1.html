@@ -176,8 +176,7 @@
         };
         buildLegend();
         renderAllCharts();
-        status.textContent = `${records.length} transacciones cargadas desde la planilla por fecha de operación (${periods[0]} – ${periods[periods.length - 1]}). Las devoluciones se representan por su magnitud; el CSV conserva los importes con su signo original.`;
-        status.className = 'rounded-xl border border-emerald-900 bg-emerald-950/60 p-3 text-sm text-emerald-200';
+        status.classList.add('hidden');
       } catch (error) {
         console.error('Error al cargar los datos de gastos:', error);
         status.textContent = `No se pudieron cargar los datos: ${error.message}`;
