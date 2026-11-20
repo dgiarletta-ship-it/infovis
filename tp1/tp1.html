@@ -15,6 +15,8 @@
     #tooltip { pointer-events: none; transition: opacity .15s ease; }
     .chart-area { height: 20rem; }
     #raw-graph-dialog { width: min(96vw, 90rem); height: 94vh; max-width: none; max-height: 94vh; overflow: hidden; }
+    #raw-graph-dialog:not([open]) { display: none; }
+    #raw-graph-dialog[open] { display: flex; flex-direction: column; }
     #raw-graph-dialog::backdrop { background: rgb(2 6 23 / .88); backdrop-filter: blur(4px); }
     @media (max-width: 640px) { .chart-area { height: 17rem; } }
   </style>
