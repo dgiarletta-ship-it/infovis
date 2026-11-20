@@ -56,10 +56,6 @@
         <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-lg font-bold text-slate-200 sm:text-xl">STREAMGRAPH — DIEGO H. GIARLETTA</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-sm text-slate-400">Titular</span></div>
         <div id="chart-diego" class="chart-area relative w-full"></div>
       </section>
-      <section id="card-ivanna" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-lg font-bold text-slate-200 sm:text-xl">STREAMGRAPH — IVANNA (SONIA I. GERONOVYCZ)</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-sm text-slate-400">Titular</span></div>
-        <div id="chart-ivanna" class="chart-area relative w-full"></div>
-      </section>
     </div>
 
     <section class="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6">
@@ -160,8 +156,7 @@
         categories = [...new Set(records.map(row => row.category))].sort((a, b) => a.localeCompare(b, 'es'));
         categoryColors.domain(categories);
         chartData = {
-          diego: aggregateRows(records.filter(row => row.holder === 'diego')),
-          ivanna: aggregateRows(records.filter(row => row.holder === 'ivanna'))
+          diego: aggregateRows(records.filter(row => row.holder === 'diego'))
         };
         buildLegend();
         renderAllCharts();
@@ -220,9 +215,7 @@
     }
 
     function renderAllCharts() {
-      if (!periods.length) return;
-      renderStreamgraph('#chart-diego', chartData.diego);
-      renderStreamgraph('#chart-ivanna', chartData.ivanna);
+      if (periods.length) renderStreamgraph('#chart-diego', chartData.diego);
     }
 
     function selectCategory(category) {
