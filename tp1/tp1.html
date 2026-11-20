@@ -87,7 +87,6 @@
   <script>
     const workbookUrl = './gastosdetarjetamensual_Final.xlsx';
     const categoryColors = d3.scaleOrdinal(d3.schemeTableau10);
-    const numberFormat = new Intl.NumberFormat('es-AR', { maximumFractionDigits: 2 });
     let periods = [];
     let categories = [];
     let records = [];
@@ -253,7 +252,7 @@
     function showTooltip(event, category) {
       d3.select('#tt-color').style('background-color', categoryColors(category));
       d3.select('#tt-category').text(category);
-      d3.select('#tt-period').text('Período: ' + event.currentTarget.closest('svg').parentElement.id.replace('chart-', ''));
+      d3.select('#tt-period').text(`Período: ${periods[0]} – ${periods[periods.length - 1]}`);
       d3.select('#tooltip').style('opacity', 1);
       moveTooltip(event);
     }
