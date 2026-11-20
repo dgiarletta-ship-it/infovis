@@ -62,17 +62,6 @@
     </dialog>
 
     <p id="dataset-status" role="status" class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-sm text-slate-300">Cargando datos de la planilla…</p>
-    <div id="selection-card" class="flex flex-col items-start justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-900/80 p-4 shadow-lg sm:flex-row sm:items-center">
-      <div class="flex items-center gap-3">
-        <div id="category-color-badge" class="h-5 w-5 rounded-md bg-slate-700"></div>
-        <div>
-          <span class="block text-sm font-semibold uppercase tracking-wider text-slate-400">Categoría seleccionada</span>
-          <span id="selected-category-name" class="text-lg font-semibold sm:text-xl">Haz clic en cualquier banda para fijar la categoría</span>
-        </div>
-      </div>
-      <button id="reset-selection-btn" onclick="clearSelection()" class="hidden rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm font-medium text-slate-200">Restablecer selección</button>
-    </div>
-
     <div id="charts-wrapper" class="space-y-6">
       <section id="card-consolidated" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
         <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-lg font-bold text-slate-200 sm:text-xl">STREAMGRAPH CONSOLIDADO — DIEGO + IVANNA</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-sm text-slate-400">Visión global</span></div>
@@ -264,17 +253,11 @@
       if (selectedCategory === category) return clearSelection();
       selectedCategory = category;
       highlightCategory(category);
-      document.getElementById('selected-category-name').textContent = category;
-      document.getElementById('category-color-badge').style.backgroundColor = categoryColors(category);
-      document.getElementById('reset-selection-btn').classList.remove('hidden');
     }
 
     function clearSelection() {
       selectedCategory = null;
       resetCategoryHighlights();
-      document.getElementById('selected-category-name').textContent = 'Haz clic en cualquier banda para fijar la categoría';
-      document.getElementById('category-color-badge').style.backgroundColor = '#334155';
-      document.getElementById('reset-selection-btn').classList.add('hidden');
     }
 
     function highlightCategory(category) {
