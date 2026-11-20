@@ -14,10 +14,6 @@
     .stream-path:hover { filter: brightness(1.15); }
     #tooltip { pointer-events: none; transition: opacity .15s ease; }
     .chart-area { height: 20rem; }
-    #raw-graph-dialog { width: min(96vw, 90rem); height: 94vh; max-width: none; max-height: 94vh; overflow: hidden; }
-    #raw-graph-dialog:not([open]) { display: none; }
-    #raw-graph-dialog[open] { display: flex; flex-direction: column; }
-    #raw-graph-dialog::backdrop { background: rgb(2 6 23 / .88); backdrop-filter: blur(4px); }
     @media (max-width: 640px) { .chart-area { height: 17rem; } }
   </style>
 </head>
@@ -35,21 +31,10 @@
     <section aria-labelledby="raw-graph-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
       <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
         <h2 id="raw-graph-title" class="text-lg font-bold text-slate-200 sm:text-xl">GRÁFICO DE TRANSACCIONES</h2>
-        <button type="button" onclick="document.getElementById('raw-graph-dialog').showModal()" aria-haspopup="dialog" aria-controls="raw-graph-dialog" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:bg-slate-700">Maximizar gráfico</button>
       </div>
-      <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">El gráfico de transacciones muestra la distribución de los consumos del período por categoría. El tamaño de cada rectángulo representa el peso relativo de esa categoría en el total de los consumos.</p>
-      <img src="./Diego-RawGraphData.svg" alt="Gráfico de datos originales de transacciones con tarjeta" class="mx-auto block h-auto max-h-[55rem] w-full max-w-full object-contain">
+      <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">La visualización jerárquica organiza los consumos en niveles para comparar las categorías y su peso relativo dentro del total.</p>
+      <div class="flourish-embed flourish-hierarchy" data-src="visualisation/30989045"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/30989045/thumbnail" width="100%" alt="hierarchy visualization" /></noscript></div><div class="flourish-fallback" data-for="visualisation/30989045"><a href="https://public.flourish.studio/visualisation/30989045/visualisation.json?ref=embed-script">https://public.flourish.studio/visualisation/30989045/visualisation.json?ref=embed-script</a></div>
     </section>
-
-    <dialog id="raw-graph-dialog" aria-labelledby="raw-graph-dialog-title" class="rounded-2xl border border-slate-700 bg-slate-900 p-4 text-slate-100 shadow-2xl sm:p-6">
-      <div class="mb-4 flex shrink-0 items-center justify-between gap-4">
-        <h2 id="raw-graph-dialog-title" class="text-xl font-bold">GRÁFICO DE TRANSACCIONES</h2>
-        <button type="button" onclick="document.getElementById('raw-graph-dialog').close()" class="rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-sm font-semibold text-slate-200 hover:bg-slate-700">Cerrar <span aria-hidden="true">×</span></button>
-      </div>
-      <div class="min-h-0 flex-1 overflow-auto rounded-lg bg-white">
-        <img src="./Diego-RawGraphData.svg" alt="Gráfico ampliado de datos originales de transacciones con tarjeta" width="2750" height="1257" class="block h-auto w-[2750px] max-w-none">
-      </div>
-    </dialog>
 
     <p id="dataset-status" role="status" class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-sm text-slate-300">Cargando datos de la planilla…</p>
     <div id="charts-wrapper" class="space-y-6">
@@ -256,11 +241,6 @@
     function hideTooltip() {
       d3.select('#tooltip').style('opacity', 0);
     }
-
-    const rawGraphDialog = document.getElementById('raw-graph-dialog');
-    rawGraphDialog.addEventListener('click', event => {
-      if (event.target === rawGraphDialog) rawGraphDialog.close();
-    });
 
     let resizeTimer;
     window.addEventListener('resize', () => {
