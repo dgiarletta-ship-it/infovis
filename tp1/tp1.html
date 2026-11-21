@@ -69,6 +69,7 @@
     const ownerLabels = { diego: 'Diego H. Giarletta', ivanna: 'Sonia I. Geronovycz' };
     let periods = [], categories = [], records = [], chartData = {}, selectedCategory = null, selectedHolder = 'all';
     function normalizeText(value) { return String(value ?? '').normalize('NFC').trim().replace(/\s+/g, ' '); }
+    function normalizeCategory(value) { return normalizeText(value).replace(/\s+(?:Diego|Ivanna)$/i, '').trim(); }
     function monthOrder(period) { const [month, year] = period.split('/').map(Number); return year * 12 + month; }
     function parseOperationDate(value, rowNumber) {
       const match = normalizeText(value).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
@@ -97,11 +98,17 @@
         if (!sheet) throw new Error('La planilla no contiene hojas con datos.');
         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
         records = rows.slice(1).filter(row => row.some(value => value !== '')).map((row, index) => {
-          const rowNumber = index + 2, { operationDate, period } = parseOperationDate(row[0], rowNumber), holder = ownerFromCell(row[1]), category = normalizeText(row[4]), amount = Number(row[5]);
+          const rowNumber = index + 2, { operationDate, period } = parseOperationDate(row[0], rowNumber), holder = ownerFromCell(row[1]), category = normalizeCategory(row[4]), amount = Number(row[5]);
           if (!category || !Number.isFinite(amount)) throw new Error(`Fila ${rowNumber}: categoría o monto inválido.`);
           return { operationDate, period, holder, category, amount };
         });
         if (!records.length) throw new Error('La planilla no contiene transacciones para mostrar.');
+        const categoryLabels = new Map();
+        for (const row of records) {
+          const key = row.category.toLocaleLowerCase('es'), previous = categoryLabels.get(key);
+          if (!previous || (previous[0] === previous[0].toLocaleLowerCase('es') && row.category[0] !== row.category[0].toLocaleLowerCase('es'))) categoryLabels.set(key, row.category);
+        }
+        for (const row of records) row.category = categoryLabels.get(row.category.toLocaleLowerCase('es'));
         periods = [...new Set(records.map(row => row.period))].sort((a, b) => monthOrder(a) - monthOrder(b));
         categories = [...new Set(records.map(row => row.category))].sort((a, b) => a.localeCompare(b, 'es'));
         categoryColors.domain(categories);
@@ -116,16 +123,13 @@
     function positiveRows() { return records.filter(row => row.amount > 0 && !/bonificaci[oó]n|devoluci[oó]n/i.test(row.category)); }
     function holderCategoryTotals() {
       const totals = new Map();
-      for (const row of positiveRows()) {
-        const key = `${row.holder}\u0000${row.category}`;
-        totals.set(key, (totals.get(key) || 0) + row.amount);
-      }
+      for (const row of positiveRows()) { const key = `${row.holder}\u0000${row.category}`; totals.set(key, (totals.get(key) || 0) + row.amount); }
       return totals;
     }
     function renderRadialChart(totals, visibleHolders, chartCategories) {
       const container = d3.select('#radial-chart').html(''), width = 760, height = 560, radius = 218;
       if (!chartCategories.length || !visibleHolders.length) return;
-      const hierarchyData = { name: 'Consumos', children: visibleHolders.map(holder => ({ name: ownerLabels[holder], holder, children: chartCategories.map(category => ({ name: category, holder, value: totals.get(`${holder}\u0000${category}`) || 0 })) })) };
+      const hierarchyData = { name: 'Consumos', children: visibleHolders.map(holder => ({ name: ownerLabels[holder], holder, children: chartCategories.filter(category => (totals.get(`${holder}\u0000${category}`) || 0) > 0).map(category => ({ name: category, holder, value: totals.get(`${holder}\u0000${category}`) })) })) };
       const root = d3.hierarchy(hierarchyData).sum(node => node.value || 0).sort((a, b) => d3.ascending(a.data.name, b.data.name));
       d3.cluster().size([2 * Math.PI, radius])(root);
       const svg = container.append('svg').attr('class', 'comparison-svg').attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', 'Gráfico jerárquico radial de montos por titular y categoría');
@@ -156,8 +160,7 @@
       if (!records.length) return;
       const totals = holderCategoryTotals(), chartCategories = [...new Set(positiveRows().map(row => row.category))].sort((a, b) => a.localeCompare(b, 'es'));
       const visibleHolders = selectedHolder === 'all' ? ['diego', 'ivanna'] : [selectedHolder];
-      renderRadialChart(totals, visibleHolders, chartCategories);
-      renderParticipationChart(totals, visibleHolders, chartCategories);
+      renderRadialChart(totals, visibleHolders, chartCategories); renderParticipationChart(totals, visibleHolders, chartCategories);
     }
     function buildLegend() {
       const container = d3.select('#legend-container').html('');
