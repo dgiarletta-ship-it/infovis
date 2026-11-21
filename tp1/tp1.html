@@ -16,14 +16,14 @@
     .chart-area { height: 20rem; }
     .comparison-svg { display: block; width: 100%; height: auto; }
     .filter-button[aria-pressed="true"] { background: #e2e8f0; color: #0f172a; border-color: #e2e8f0; }
-    #theme-toggle { background: #1e293b; color: #f8fafc; border: 1px solid #475569; }
+    #theme-toggle, #pdf-export { background: #1e293b; color: #f8fafc; border: 1px solid #475569; }
     body.light-theme { background-color: #f1f5f9; color: #0f172a; }
     body.light-theme header { background: rgba(255, 255, 255, .94); border-color: #cbd5e1; }
     body.light-theme main section, body.light-theme article { background-color: #fff; border-color: #cbd5e1; }
     body.light-theme [class*="bg-slate-900"], body.light-theme [class*="bg-slate-800"] { background-color: #f8fafc; }
     body.light-theme [class*="text-slate-"], body.light-theme [class~="text-white"] { color: #334155 !important; }
     body.light-theme [class*="border-slate-"] { border-color: #cbd5e1; }
-    body.light-theme #theme-toggle { background: #fff; color: #0f172a; border-color: #94a3b8; }
+    body.light-theme #theme-toggle, body.light-theme #pdf-export { background: #fff; color: #0f172a; border-color: #94a3b8; }
     body.light-theme #tooltip { background: rgba(255,255,255,.97); border-color: #cbd5e1; color: #0f172a; }
     body.light-theme #tooltip #tt-category, body.light-theme #tooltip #tt-value { color: #0f172a; }
     body.light-theme #tooltip #tt-period, body.light-theme #tooltip .text-slate-400 { color: #475569 !important; }
@@ -34,6 +34,23 @@
     body.light-theme #chart-total svg .tick line, body.light-theme #chart-monthly-total svg .tick line { stroke: rgba(15,23,42,.16) !important; }
     body.light-theme #chart-total svg .tick text { fill: #334155 !important; }
     body.light-theme .filter-button[aria-pressed="true"] { background: #cbd5e1; color: #0f172a; }
+    @media print {
+      @page { size: landscape; margin: 12mm; }
+      body, body.light-theme { background: #fff !important; color: #111827 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      header { position: static !important; background: #fff !important; color: #111827 !important; border-color: #cbd5e1 !important; }
+      main { max-width: none !important; padding: 0 !important; }
+      main section, article, #card-total > div { background: #fff !important; border-color: #cbd5e1 !important; box-shadow: none !important; break-inside: avoid; }
+      main section, article, main p, main h2, main h3 { color: #111827 !important; }
+      #theme-toggle, #pdf-export, [aria-label="Filtrar los gráficos por titular"], #tooltip, #dataset-status { display: none !important; }
+      #charts-wrapper { display: block !important; }
+      .chart-area { height: 17rem; break-inside: avoid; }
+      #participation-chart, #radial-chart, #chart-monthly-total, #chart-total { break-inside: avoid; }
+      #radial-chart svg text, #participation-chart svg text, #chart-monthly-total svg text, #chart-total svg .tick text { fill: #111827 !important; }
+      #radial-chart svg path { stroke: #94a3b8 !important; }
+      #chart-monthly-total svg .tick line, #chart-total svg .tick line { stroke: #cbd5e1 !important; }
+      #legend-container button { background: #fff !important; color: #111827 !important; border-color: #cbd5e1 !important; }
+      #legend-container button span { color: #111827 !important; }
+    }
     @media (max-width: 640px) { .chart-area { height: 17rem; } }
   </style>
 </head>
@@ -45,7 +62,10 @@
       <p class="mt-1 text-xs font-medium text-slate-300 sm:text-sm">Alumno: Diego Hernán Giarletta</p>
       <div class="mt-3 flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between">
         <p class="max-w-3xl text-sm leading-relaxed text-slate-300"><strong class="font-semibold text-slate-100">Objetivo:</strong> El siguiente reporte presenta el detalle de los consumos con tarjeta de crédito desde agosto de 2025 hasta agosto de 2026, agrupados por mes de operación.</p>
-        <button id="theme-toggle" type="button" class="shrink-0 rounded-lg px-3 py-2 text-sm font-semibold transition hover:opacity-80" aria-label="Cambiar a modo claro" aria-pressed="false">Modo claro</button>
+        <div class="flex shrink-0 flex-col items-start gap-2 sm:items-end">
+          <button id="theme-toggle" type="button" class="rounded-lg px-3 py-2 text-sm font-semibold transition hover:opacity-80" aria-label="Cambiar a modo claro" aria-pressed="false">Modo claro</button>
+          <button id="pdf-export" type="button" class="rounded-lg px-3 py-2 text-sm font-semibold transition hover:opacity-80" aria-label="Exportar el informe a PDF">Exportar a PDF</button>
+        </div>
       </div>
     </div>
   </header>
@@ -280,6 +300,7 @@
     }
     setTheme(localStorage.getItem('tp1-theme') === 'light' ? 'light' : 'dark');
     themeToggle.addEventListener('click', () => setTheme(document.body.classList.contains('light-theme') ? 'dark' : 'light'));
+    document.getElementById('pdf-export').addEventListener('click', () => window.print());
     d3.selectAll('.filter-button').on('click', function() { selectedHolder = this.dataset.holder; d3.selectAll('.filter-button').attr('aria-pressed', function() { return this.dataset.holder === selectedHolder ? 'true' : 'false'; }); renderAllCharts(); });
     let resizeTimer;
     window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderAllCharts(); }, 150); });
