@@ -27,11 +27,11 @@
     body.light-theme #tooltip { background: rgba(255,255,255,.97); border-color: #cbd5e1; color: #0f172a; }
     body.light-theme #tooltip #tt-category, body.light-theme #tooltip #tt-value { color: #0f172a; }
     body.light-theme #tooltip #tt-period, body.light-theme #tooltip .text-slate-400 { color: #475569 !important; }
-    body.light-theme #radial-chart svg text, body.light-theme #participation-chart svg text, body.light-theme #chart-monthly-total svg text { fill: #334155 !important; }
+    body.light-theme #radial-chart svg text, body.light-theme #participation-chart svg text { fill: #334155 !important; }
     body.light-theme #radial-chart svg text.holder-diego { fill: #0284c7 !important; }
     body.light-theme #radial-chart svg text.holder-ivanna { fill: #ea580c !important; }
     body.light-theme #radial-chart svg path { stroke: #94a3b8; }
-    body.light-theme #chart-total svg .tick line, body.light-theme #chart-monthly-total svg .tick line { stroke: rgba(15,23,42,.16) !important; }
+    body.light-theme #chart-total svg .tick line { stroke: rgba(15,23,42,.16) !important; }
     body.light-theme #chart-total svg .tick text { fill: #334155 !important; }
     body.light-theme .filter-button[aria-pressed="true"] { background: #cbd5e1; color: #0f172a; }
     @media print {
@@ -42,15 +42,15 @@
       main section, article, #card-total > div { background: #fff !important; border-color: #cbd5e1 !important; box-shadow: none !important; }
       main section, article, main p, main h2, main h3 { color: #111827 !important; }
       main section { break-inside: auto; }
-      article, #chart-monthly-total, #chart-total, #radial-chart, #participation-chart, #legend-container { break-inside: avoid; }
+      article, #chart-total, #radial-chart, #participation-chart, #legend-container, #flourish-monthly-chart .flourish-embed { break-inside: avoid; }
       h2, h3 { break-after: avoid; }
       #theme-toggle, #pdf-export, [aria-label="Filtrar los gráficos por titular"], #tooltip, #dataset-status { display: none !important; }
       #charts-wrapper { display: block !important; }
       .chart-area { height: 150mm; max-height: 150mm; break-inside: avoid; }
-      #radial-chart svg, #participation-chart svg, #chart-monthly-total svg, #chart-total svg { max-width: 100% !important; }
-      #radial-chart svg text, #participation-chart svg text, #chart-monthly-total svg text, #chart-total svg .tick text { fill: #111827 !important; }
+      #radial-chart svg, #participation-chart svg, #chart-total svg { max-width: 100% !important; }
+      #radial-chart svg text, #participation-chart svg text, #chart-total svg .tick text { fill: #111827 !important; }
       #radial-chart svg path { stroke: #94a3b8 !important; }
-      #chart-monthly-total svg .tick line, #chart-total svg .tick line { stroke: #cbd5e1 !important; }
+      #chart-total svg .tick line { stroke: #cbd5e1 !important; }
       #legend-container button { background: #fff !important; color: #111827 !important; border-color: #cbd5e1 !important; }
       #legend-container button span { color: #111827 !important; }
     }
@@ -99,14 +99,18 @@
     <div id="charts-wrapper" class="space-y-6">
       <section id="card-total" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
         <h2 class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">EVOLUCIÓN MENSUAL DE CONSUMOS</h2>
-        <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">Los gráficos muestran la evolución mensual de los consumos por categoría del titular elegido en el filtro general. Al seleccionar “Todos”, suman los consumos de Diego e Ivanna; al elegir un titular, muestran solo sus consumos. El gráfico de línea facilita comparar los montos totales por mes. Los montos se expresan en miles e incluyen las devoluciones por su magnitud.</p>
-        <h3 class="mb-2 text-base font-semibold text-slate-200">MONTO TOTAL POR MES</h3>
-        <div id="chart-monthly-total" class="chart-area relative w-full" aria-label="Gráfico de línea del monto total por mes"></div>
-        <h3 class="mb-2 mt-5 text-base font-semibold text-slate-200">EVOLUCIÓN POR CATEGORÍA</h3>
+        <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">El gráfico de áreas muestra la evolución mensual de los consumos por categoría. Al seleccionar “Todos” en el filtro general, suma los consumos de Diego e Ivanna; al elegir un titular, muestra solo sus consumos. Los montos se expresan en miles e incluyen las devoluciones por su magnitud.</p>
+        <h3 class="mb-2 text-base font-semibold text-slate-200">EVOLUCIÓN POR CATEGORÍA</h3>
         <div id="chart-total" class="chart-area relative w-full"></div>
         <div class="mt-4 rounded-xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6"><h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-300 sm:text-base">FILTRO UNIFICADO DE CATEGORÍAS</h3><div id="legend-container" class="flex flex-wrap gap-2 text-sm"></div></div>
       </section>
     </div>
+    <section id="flourish-monthly-chart" aria-labelledby="flourish-monthly-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
+      <h2 id="flourish-monthly-title" class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">MONTO TOTAL POR MES</h2>
+      <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">Visualización de Flourish con los montos mensuales del archivo <a class="underline" href="./gasto_mensual_flourish.csv">gasto_mensual_flourish.csv</a>. Este gráfico muestra las series del archivo y no cambia con el filtro general de titulares.</p>
+      <div class="flourish-embed flourish-chart" data-src="visualisation/30990651"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/30990651/thumbnail" width="100%" alt="Gráfico del monto total por mes" /></noscript></div>
+      <div class="flourish-fallback" data-for="visualisation/30990651"><a href="https://public.flourish.studio/visualisation/30990651/visualisation.json?ref=embed-script">https://public.flourish.studio/visualisation/30990651/visualisation.json?ref=embed-script</a></div>
+    </section>
   </main>
   <div id="tooltip" class="fixed z-50 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-700 bg-slate-900/95 p-3 text-sm text-slate-100 opacity-0 shadow-2xl backdrop-blur-md"><div class="mb-1 flex items-center gap-2"><span id="tt-color" class="inline-block h-3 w-3 rounded-full"></span><span id="tt-category" class="text-base font-bold text-white"></span></div><div id="tt-period" class="text-slate-300"></div><div id="tt-value" class="mt-1 font-semibold text-slate-100"></div><div class="mt-1 text-xs italic text-slate-400">Haz clic para seleccionar</div></div>
   <script>
@@ -240,36 +244,10 @@
       group.selectAll('.stream-path').data(series).join('path').attr('class', 'stream-path').attr('d', area).attr('fill', layer => categoryColors(layer.key)).attr('data-category', layer => layer.key).style('opacity', layer => selectedCategory === null || selectedCategory === layer.key ? 0.9 : 0.12).on('mouseover', function(event, layer) { showTooltip(event, layer, xScale, group); if (selectedCategory === null) highlightCategory(layer.key); }).on('mousemove', (event, layer) => showTooltip(event, layer, xScale, group)).on('mouseout', () => { hideTooltip(); if (selectedCategory === null) resetCategoryHighlights(); }).on('click', (event, layer) => selectCategory(layer.key));
       const axis = group.append('g').attr('transform', `translate(0,${innerHeight + 2})`).call(d3.axisBottom(xScale).tickSize(-innerHeight).tickPadding(12)); axis.select('.domain').remove(); axis.selectAll('.tick line').attr('stroke', 'rgba(255,255,255,.08)').attr('stroke-dasharray', '3,3'); axis.selectAll('.tick text').attr('fill', '#cbd5e1').attr('font-size', '14px').attr('font-weight', '500');
     }
-    function renderMonthlyTotalChart(data) {
-      const container = d3.select('#chart-monthly-total').html(''), node = container.node(), width = node.clientWidth, height = node.clientHeight;
-      if (!width || !height || !data.length) return;
-      const margin = { top: 18, right: 24, bottom: 48, left: 68 }, innerWidth = width - margin.left - margin.right, innerHeight = height - margin.top - margin.bottom;
-      const totals = data.map(row => ({ period: row.period, value: d3.sum(categories, category => row[category] || 0) }));
-      const x = d3.scalePoint().domain(periods).range([0, innerWidth]).padding(0.25), y = d3.scaleLinear().domain([0, d3.max(totals, d => d.value) || 1]).nice().range([innerHeight, 0]);
-      const svg = container.append('svg').attr('class', 'comparison-svg').attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', 'Monto total de consumos por mes, expresado en miles');
-      const group = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
-      const yAxis = group.append('g').call(d3.axisLeft(y).ticks(5).tickFormat(value => value.toLocaleString('es-AR', { maximumFractionDigits: 0 })));
-      yAxis.selectAll('text').attr('fill', '#cbd5e1').attr('font-size', 11); yAxis.selectAll('line,path').attr('stroke', '#64748b');
-      const xAxis = group.append('g').attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(x).tickSize(-innerHeight).tickPadding(10));
-      xAxis.select('.domain').remove(); xAxis.selectAll('.tick line').attr('stroke', 'rgba(255,255,255,.08)').attr('stroke-dasharray', '3,3'); xAxis.selectAll('text').attr('fill', '#cbd5e1').attr('font-size', 11);
-      group.append('text').attr('transform', 'rotate(-90)').attr('x', -innerHeight / 2).attr('y', -52).attr('text-anchor', 'middle').attr('fill', '#cbd5e1').attr('font-size', 11).text('Monto (miles)');
-      const line = d3.line().x(d => x(d.period)).y(d => y(d.value)).curve(d3.curveMonotoneX);
-      group.append('path').datum(totals).attr('fill', 'none').attr('stroke', '#38BDF8').attr('stroke-width', 3).attr('d', line);
-      group.selectAll('circle').data(totals).join('circle').attr('cx', d => x(d.period)).attr('cy', d => y(d.value)).attr('r', 4).attr('fill', '#38BDF8').attr('stroke', '#0f172a').attr('stroke-width', 2).on('mouseover', showMonthlyTotalTooltip).on('mousemove', moveTooltip).on('mouseout', hideTooltip).append('title').text(d => `${d.period}: ${formatAmount(d.value)} miles`);
-    }
-    function showMonthlyTotalTooltip(event, point) {
-      d3.select('#tt-color').style('background-color', '#38BDF8');
-      d3.select('#tt-category').text('Consumo total');
-      d3.select('#tt-period').text(`Período: ${point.period}`);
-      d3.select('#tt-value').text(`Monto: ${formatAmount(point.value)} miles`);
-      d3.select('#tooltip').style('opacity', 1);
-      moveTooltip(event);
-    }
     function renderAllCharts() {
       if (periods.length) {
         const holderRows = selectedHolder === 'all' ? records : records.filter(row => row.holder === selectedHolder);
         const monthlyData = aggregateRows(holderRows);
-        renderMonthlyTotalChart(monthlyData);
         renderStreamgraph('#chart-total', monthlyData);
       }
       renderComparisonCharts();
