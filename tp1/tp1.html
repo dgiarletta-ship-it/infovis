@@ -186,7 +186,7 @@
     function showTooltip(event, category) { d3.select('#tt-color').style('background-color', categoryColors(category)); d3.select('#tt-category').text(category); d3.select('#tt-period').text(`Período: ${periods[0]} – ${periods[periods.length - 1]}`); d3.select('#tooltip').style('opacity', 1); moveTooltip(event); }
     function moveTooltip(event) { d3.select('#tooltip').style('left', event.clientX + 'px').style('top', event.clientY + 'px'); }
     function hideTooltip() { d3.select('#tooltip').style('opacity', 0); }
-    d3.selectAll('.filter-button').on('click', function() { selectedHolder = this.dataset.holder; d3.selectAll('.filter-button').attr('aria-pressed', button => button.dataset.holder === selectedHolder ? 'true' : 'false'); renderComparisonCharts(); });
+    d3.selectAll('.filter-button').on('click', function() { selectedHolder = this.dataset.holder; d3.selectAll('.filter-button').attr('aria-pressed', function() { return this.dataset.holder === selectedHolder ? 'true' : 'false'; }); renderComparisonCharts(); });
     let resizeTimer;
     window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderAllCharts(); }, 150); });
     loadWorkbook();
