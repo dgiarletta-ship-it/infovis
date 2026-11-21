@@ -53,10 +53,10 @@
     </section>
     <p id="dataset-status" role="status" class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-sm text-slate-300">Cargando datos de la planilla…</p>
     <div id="charts-wrapper" class="space-y-6">
-      <section id="card-diego" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-lg font-bold text-slate-200 sm:text-xl">EVOLUCIÓN MENSUAL DE CONSUMOS</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-sm text-slate-400">Diego</span></div>
-        <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">El streamgraph representa la evolución mensual de los consumos de Diego por categoría. El ancho de cada banda refleja el monto acumulado de esa categoría en cada mes y permite observar cómo cambia la distribución de los gastos a lo largo del período. Los montos se expresan en miles y las devoluciones se muestran por su magnitud.</p>
-        <div id="chart-diego" class="chart-area relative w-full"></div>
+      <section id="card-total" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
+        <h2 class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">EVOLUCIÓN MENSUAL DE CONSUMOS</h2>
+        <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">El streamgraph representa la evolución mensual del total de consumos de ambos titulares, agrupados por categoría. El ancho de cada banda refleja el monto acumulado de esa categoría en cada mes y permite observar cómo cambia la distribución de los gastos a lo largo del período. Los montos se expresan en miles y las devoluciones se muestran por su magnitud.</p>
+        <div id="chart-total" class="chart-area relative w-full"></div>
       </section>
     </div>
     <section class="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6"><h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-300 sm:text-base">Leyenda unificada de categorías</h2><div id="legend-container" class="flex flex-wrap gap-2 text-sm"></div></section>
@@ -67,7 +67,7 @@
     const categoryColors = d3.scaleOrdinal(d3.schemeTableau10);
     const ownerColors = { diego: '#3F334D', ivanna: '#FF4000' };
     const ownerLabels = { diego: 'Diego H. Giarletta', ivanna: 'Sonia I. Geronovycz' };
-    let periods = [], categories = [], records = [], chartData = {}, selectedCategory = null, selectedHolder = 'all';
+    let periods = [], categories = [], records = [], chartData = [], selectedCategory = null, selectedHolder = 'all';
     function normalizeText(value) { return String(value ?? '').normalize('NFC').trim().replace(/\s+/g, ' '); }
     function normalizeCategory(value) { return normalizeText(value).replace(/\s+(?:Diego|Ivanna)$/i, '').trim(); }
     function monthOrder(period) { const [month, year] = period.split('/').map(Number); return year * 12 + month; }
@@ -112,7 +112,7 @@
         periods = [...new Set(records.map(row => row.period))].sort((a, b) => monthOrder(a) - monthOrder(b));
         categories = [...new Set(records.map(row => row.category))].sort((a, b) => a.localeCompare(b, 'es'));
         categoryColors.domain(categories);
-        chartData = { diego: aggregateRows(records.filter(row => row.holder === 'diego')) };
+        chartData = aggregateRows(records);
         buildLegend(); renderAllCharts(); status.classList.add('hidden');
       } catch (error) {
         console.error('Error al cargar los datos de gastos:', error);
@@ -178,7 +178,7 @@
       group.selectAll('.stream-path').data(series).join('path').attr('class', 'stream-path').attr('d', area).attr('fill', layer => categoryColors(layer.key)).attr('data-category', layer => layer.key).style('opacity', layer => selectedCategory === null || selectedCategory === layer.key ? 0.9 : 0.12).on('mouseover', function(event, layer) { showTooltip(event, layer, xScale, group); if (selectedCategory === null) highlightCategory(layer.key); }).on('mousemove', (event, layer) => showTooltip(event, layer, xScale, group)).on('mouseout', () => { hideTooltip(); if (selectedCategory === null) resetCategoryHighlights(); }).on('click', (event, layer) => selectCategory(layer.key));
       const axis = group.append('g').attr('transform', `translate(0,${innerHeight + 2})`).call(d3.axisBottom(xScale).tickSize(-innerHeight).tickPadding(12)); axis.select('.domain').remove(); axis.selectAll('.tick line').attr('stroke', 'rgba(255,255,255,.08)').attr('stroke-dasharray', '3,3'); axis.selectAll('.tick text').attr('fill', '#cbd5e1').attr('font-size', '14px').attr('font-weight', '500');
     }
-    function renderAllCharts() { if (periods.length) renderStreamgraph('#chart-diego', chartData.diego); renderComparisonCharts(); }
+    function renderAllCharts() { if (periods.length) renderStreamgraph('#chart-total', chartData); renderComparisonCharts(); }
     function selectCategory(category) { if (selectedCategory === category) return clearSelection(); selectedCategory = category; highlightCategory(category); }
     function clearSelection() { selectedCategory = null; resetCategoryHighlights(); }
     function highlightCategory(category) { d3.selectAll('.stream-path').style('opacity', function() { return d3.select(this).attr('data-category') === category ? 1 : 0.12; }); d3.selectAll('.legend-item').style('opacity', function() { return d3.select(this).attr('data-category') === category ? 1 : 0.3; }); }
