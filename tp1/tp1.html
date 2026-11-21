@@ -140,7 +140,7 @@
       moveTooltip(event);
     }
     function renderRadialChart(totals, visibleHolders, chartCategories) {
-      const container = d3.select('#radial-chart').html(''), width = 760, height = 560, radius = 218;
+      const container = d3.select('#radial-chart').html(''), width = Math.max(360, container.node().clientWidth), height = width * 560 / 760, radius = Math.min(width * 0.29, height * 0.39);
       if (!chartCategories.length || !visibleHolders.length) return;
       const hierarchyData = { name: 'Consumos', children: visibleHolders.map(holder => ({ name: ownerLabels[holder], holder, children: chartCategories.filter(category => (totals.get(`${holder}\u0000${category}`) || 0) > 0).map(category => ({ name: category, holder, value: totals.get(`${holder}\u0000${category}`) })) })) };
       const root = d3.hierarchy(hierarchyData).sum(node => node.value || 0).sort((a, b) => d3.ascending(a.data.name, b.data.name));
@@ -148,28 +148,28 @@
       const svg = container.append('svg').attr('class', 'comparison-svg').attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', 'Gráfico jerárquico radial de montos por titular y categoría');
       const group = svg.append('g').attr('transform', `translate(${width / 2},${height / 2})`);
       group.append('g').attr('fill', 'none').attr('stroke', '#64748b').attr('stroke-opacity', 0.42).selectAll('path').data(root.links()).join('path').attr('d', d3.linkRadial().angle(d => d.x).radius(d => d.y));
-      group.append('g').selectAll('circle').data(root.descendants().slice(1)).join('circle').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`).attr('r', d => d.children ? 3 : 4).attr('fill', d => ownerColors[d.data.holder] || '#94a3b8').append('title').text(radialNodeDescription);
-      group.append('g').selectAll('text').data(root.descendants().slice(1)).join('text').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y + 7},0)${d.x >= Math.PI ? ' rotate(180)' : ''}`).attr('text-anchor', d => d.x < Math.PI ? 'start' : 'end').attr('dy', '0.32em').attr('fill', d => d.depth === 1 ? ownerColors[d.data.holder] : '#cbd5e1').attr('font-size', d => d.children ? '10px' : '8px').text(d => d.data.name).append('title').text(radialNodeDescription);
+      group.append('g').selectAll('circle').data(root.descendants().slice(1)).join('circle').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`).attr('r', d => d.children ? 3.5 : 4.5).attr('fill', d => ownerColors[d.data.holder] || '#94a3b8').append('title').text(radialNodeDescription);
+      group.append('g').selectAll('text').data(root.descendants().slice(1)).join('text').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y + 8},0)${d.x >= Math.PI ? ' rotate(180)' : ''}`).attr('text-anchor', d => d.x < Math.PI ? 'start' : 'end').attr('dy', '0.32em').attr('fill', d => d.depth === 1 ? ownerColors[d.data.holder] : '#cbd5e1').attr('font-size', d => d.children ? '13px' : '11px').text(d => d.data.name).append('title').text(radialNodeDescription);
       group.selectAll('text').filter(d => !d.children).on('mouseover', showRadialTooltip).on('mousemove', moveTooltip).on('mouseout', hideTooltip);
       group.selectAll('circle').filter(d => !d.children).on('mouseover', showRadialTooltip).on('mousemove', moveTooltip).on('mouseout', hideTooltip);
     }
     function renderParticipationChart(totals, visibleHolders, chartCategories) {
-      const container = d3.select('#participation-chart').html(''), width = Math.max(360, container.node().clientWidth), margin = { top: 24, right: 48, bottom: 42, left: 164 }, rowHeight = 30, height = margin.top + margin.bottom + chartCategories.length * rowHeight;
+      const container = d3.select('#participation-chart').html(''), width = Math.max(360, container.node().clientWidth), margin = { top: 30, right: 56, bottom: 52, left: 174 }, rowHeight = 38, height = margin.top + margin.bottom + chartCategories.length * rowHeight;
       if (!chartCategories.length || !visibleHolders.length) return;
       const chartTotals = new Map(visibleHolders.map(holder => [holder, d3.sum(chartCategories, category => totals.get(`${holder}\u0000${category}`) || 0)]));
       const maxPercent = d3.max(visibleHolders, holder => d3.max(chartCategories, category => 100 * (totals.get(`${holder}\u0000${category}`) || 0) / (chartTotals.get(holder) || 1))) || 1;
       const x = d3.scaleLinear().domain([0, Math.ceil(maxPercent / 5) * 5]).nice().range([margin.left, width - margin.right]);
       const svg = container.append('svg').attr('class', 'comparison-svg').attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', 'Porcentaje del gasto positivo por categoría y titular');
       const axis = svg.append('g').attr('transform', `translate(0,${height - margin.bottom})`).call(d3.axisBottom(x).ticks(5).tickFormat(value => `${value}%`));
-      axis.selectAll('text').attr('fill', '#cbd5e1'); axis.selectAll('line,path').attr('stroke', '#64748b');
-      svg.append('text').attr('x', margin.left).attr('y', 14).attr('fill', '#cbd5e1').attr('font-size', 11).text('Participación del gasto positivo de cada titular');
+      axis.selectAll('text').attr('fill', '#cbd5e1').attr('font-size', 12); axis.selectAll('line,path').attr('stroke', '#64748b');
+      svg.append('text').attr('x', margin.left).attr('y', 18).attr('fill', '#cbd5e1').attr('font-size', 13).text('Participación del gasto positivo de cada titular');
       const rows = svg.append('g').selectAll('g').data(chartCategories).join('g').attr('transform', (category, i) => `translate(0,${margin.top + i * rowHeight})`);
-      rows.append('text').attr('x', margin.left - 10).attr('y', rowHeight / 2).attr('text-anchor', 'end').attr('dominant-baseline', 'middle').attr('fill', '#e2e8f0').attr('font-size', 10).text(category => category);
-      const barHeight = visibleHolders.length === 1 ? 14 : 10, gap = visibleHolders.length === 1 ? 0 : 2;
+      rows.append('text').attr('x', margin.left - 10).attr('y', rowHeight / 2).attr('text-anchor', 'end').attr('dominant-baseline', 'middle').attr('fill', '#e2e8f0').attr('font-size', 12).text(category => category);
+      const barHeight = visibleHolders.length === 1 ? 17 : 13, gap = visibleHolders.length === 1 ? 0 : 2;
       rows.selectAll('rect').data(category => visibleHolders.map((holder, index) => { const amount = totals.get(`${holder}\u0000${category}`) || 0; return { category, holder, index, value: 100 * amount / (chartTotals.get(holder) || 1) }; })).join('rect').attr('x', x(0)).attr('y', d => (rowHeight - (visibleHolders.length * barHeight + (visibleHolders.length - 1) * gap)) / 2 + d.index * (barHeight + gap)).attr('width', d => Math.max(0, x(d.value) - x(0))).attr('height', barHeight).attr('rx', 2).attr('fill', d => ownerColors[d.holder]).append('title').text(d => `${d.category} · ${ownerLabels[d.holder]}: ${d.value.toFixed(2)}%`);
-      rows.selectAll('.value-label').data(category => visibleHolders.map((holder, index) => { const amount = totals.get(`${holder}\u0000${category}`) || 0; return { category, holder, index, value: 100 * amount / (chartTotals.get(holder) || 1) }; })).join('text').attr('class', 'value-label').attr('x', d => d.value > 0 ? Math.min(width - 5, x(d.value) + 4) : x(0) + 4).attr('y', d => (rowHeight - (visibleHolders.length * barHeight + (visibleHolders.length - 1) * gap)) / 2 + d.index * (barHeight + gap) + barHeight / 2).attr('dominant-baseline', 'middle').attr('fill', '#f8fafc').attr('font-size', 9).text(d => `${d.value.toFixed(2)}%`);
-      const legend = svg.append('g').attr('transform', `translate(${margin.left},${height - 12})`);
-      visibleHolders.forEach((holder, i) => { const xPos = i * 165; legend.append('rect').attr('x', xPos).attr('y', -9).attr('width', 10).attr('height', 10).attr('fill', ownerColors[holder]); legend.append('text').attr('x', xPos + 15).attr('y', 0).attr('fill', ownerColors[holder]).attr('font-size', 10).text(ownerLabels[holder]); });
+      rows.selectAll('.value-label').data(category => visibleHolders.map((holder, index) => { const amount = totals.get(`${holder}\u0000${category}`) || 0; return { category, holder, index, value: 100 * amount / (chartTotals.get(holder) || 1) }; })).join('text').attr('class', 'value-label').attr('x', d => d.value > 0 ? Math.min(width - 5, x(d.value) + 5) : x(0) + 5).attr('y', d => (rowHeight - (visibleHolders.length * barHeight + (visibleHolders.length - 1) * gap)) / 2 + d.index * (barHeight + gap) + barHeight / 2).attr('dominant-baseline', 'middle').attr('fill', '#f8fafc').attr('font-size', 11).text(d => `${d.value.toFixed(2)}%`);
+      const legend = svg.append('g').attr('transform', `translate(${margin.left},${height - 16})`);
+      visibleHolders.forEach((holder, i) => { const xPos = i * 190; legend.append('rect').attr('x', xPos).attr('y', -11).attr('width', 12).attr('height', 12).attr('fill', ownerColors[holder]); legend.append('text').attr('x', xPos + 18).attr('y', 0).attr('fill', ownerColors[holder]).attr('font-size', 12).text(ownerLabels[holder]); });
     }
     function renderComparisonCharts() {
       if (!records.length) return;
