@@ -14,6 +14,8 @@
     .stream-path:hover { filter: brightness(1.15); }
     #tooltip { pointer-events: none; transition: opacity .15s ease; }
     .chart-area { height: 20rem; }
+    .comparison-svg { display: block; width: 100%; height: auto; }
+    .filter-button[aria-pressed="true"] { background: #e2e8f0; color: #0f172a; border-color: #e2e8f0; }
     @media (max-width: 640px) { .chart-area { height: 17rem; } }
   </style>
 </head>
@@ -26,246 +28,164 @@
       <p class="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300"><strong class="font-semibold text-slate-100">Objetivo:</strong> El siguiente reporte presenta el detalle de los consumos con tarjeta de crédito desde agosto de 2025 hasta agosto de 2026, agrupados por mes de operación.</p>
     </div>
   </header>
-
   <main class="mx-auto w-full max-w-none space-y-6 p-4 sm:p-6 lg:p-8">
     <section aria-labelledby="current-situation-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
       <h2 id="current-situation-title" class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">SITUACIÓN ACTUAL DE LOS CONSUMOS</h2>
       <p class="mb-5 max-w-5xl text-sm leading-relaxed text-slate-300">Durante el período analizado se registraron 560 transacciones. Diego H. Giarletta concentra el 57,30 % de los gastos positivos y Sonia I. Geronovycz el 42,70 %. Los porcentajes se calculan sobre el gasto positivo total de ambos titulares; las bonificaciones y devoluciones se excluyen.</p>
       <div class="grid gap-4 md:grid-cols-2">
-        <article class="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4">
-          <h3 class="text-base font-bold text-slate-100">DIEGO H. GIARLETTA</h3>
-          <p class="mt-1 text-sm text-slate-300"><span class="font-semibold text-white">310 transacciones</span> · 57,30 % del gasto positivo total</p>
-          <p class="mt-2 text-sm leading-relaxed text-slate-300">Sus consumos se concentran principalmente en comida, servicios (luz y gas), telefonía y combustible.</p>
-        </article>
-        <article class="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4">
-          <h3 class="text-base font-bold text-slate-100">SONIA I. GERONOVYCZ</h3>
-          <p class="mt-1 text-sm text-slate-300"><span class="font-semibold text-white">250 transacciones</span> · 42,70 % del gasto positivo total</p>
-          <p class="mt-2 text-sm leading-relaxed text-slate-300">Sus consumos se concentran principalmente en ropa, comida y transporte.</p>
-        </article>
+        <article class="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4"><h3 class="text-base font-bold text-slate-100">DIEGO H. GIARLETTA</h3><p class="mt-1 text-sm text-slate-300"><span class="font-semibold text-white">310 transacciones</span> · 57,30 % del gasto positivo total</p><p class="mt-2 text-sm leading-relaxed text-slate-300">Sus consumos se concentran principalmente en comida, servicios (luz y gas), telefonía y combustible.</p></article>
+        <article class="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4"><h3 class="text-base font-bold text-slate-100">SONIA I. GERONOVYCZ</h3><p class="mt-1 text-sm text-slate-300"><span class="font-semibold text-white">250 transacciones</span> · 42,70 % del gasto positivo total</p><p class="mt-2 text-sm leading-relaxed text-slate-300">Sus consumos se concentran principalmente en ropa, comida y transporte.</p></article>
       </div>
     </section>
-
     <section aria-labelledby="comparison-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
       <h2 id="comparison-title" class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">COMPARACIÓN DE CONSUMOS POR TITULAR</h2>
-      <p class="mb-5 max-w-5xl text-sm leading-relaxed text-slate-300">El gráfico radial organiza los consumos por titular y categoría, y el gráfico de barras compara el porcentaje de participación de cada categoría en los gastos positivos de ambos titulares.</p>
-      <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
-        <div class="min-w-0">
-          <h3 class="mb-3 text-base font-bold text-slate-200 sm:text-lg">GRÁFICO JERÁRQUICO RADIAL</h3>
-          <div class="flourish-embed flourish-hierarchy" data-src="visualisation/30989045"><noscript><img src="https://public.flourish.studio/visualisation/30989045/thumbnail" width="100%" alt="Gráfico jerárquico radial de consumos por titular y categoría" /></noscript></div>
-        </div>
-        <div class="min-w-0">
-          <h3 class="mb-3 text-base font-bold text-slate-200 sm:text-lg">PARTICIPACIÓN POR CATEGORÍA Y TITULAR</h3>
-          <div class="flourish-embed flourish-chart" data-src="visualisation/30990179"><noscript><img src="https://public.flourish.studio/visualisation/30990179/thumbnail" width="100%" alt="Participación porcentual por categoría y titular" /></noscript></div>
-        </div>
+      <p class="mb-5 max-w-5xl text-sm leading-relaxed text-slate-300">El gráfico radial organiza los consumos por titular y categoría, y el gráfico de barras compara el porcentaje de participación de cada categoría en los gastos positivos de ambos titulares. El filtro se aplica a los dos gráficos al mismo tiempo.</p>
+      <div class="mb-6 flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar los gráficos por titular">
+        <span class="mr-1 text-sm font-medium text-slate-300">Titular:</span>
+        <button type="button" class="filter-button rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-200" data-holder="all" aria-pressed="true">Todos</button>
+        <button type="button" class="filter-button rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-200" data-holder="diego" aria-pressed="false">Diego</button>
+        <button type="button" class="filter-button rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-200" data-holder="ivanna" aria-pressed="false">Sonia</button>
       </div>
-      <script src="https://public.flourish.studio/resources/embed.js"></script>
-      <div class="flourish-fallback" data-for="visualisation/30989045"><a href="https://public.flourish.studio/visualisation/30989045/visualisation.json?ref=embed-script">Gráfico jerárquico radial de consumos</a></div>
-      <div class="flourish-fallback" data-for="visualisation/30990179"><a href="https://public.flourish.studio/visualisation/30990179/visualisation.json?ref=embed-script">Gráfico de participación por categoría y titular</a></div>
+      <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+        <div class="min-w-0"><h3 class="mb-3 text-base font-bold text-slate-200 sm:text-lg">GRÁFICO JERÁRQUICO RADIAL</h3><div id="radial-chart" aria-label="Gráfico jerárquico radial"></div></div>
+        <div class="min-w-0"><h3 class="mb-3 text-base font-bold text-slate-200 sm:text-lg">PARTICIPACIÓN POR CATEGORÍA Y TITULAR</h3><div id="participation-chart" aria-label="Participación porcentual por categoría y titular"></div></div>
+      </div>
     </section>
-
     <p id="dataset-status" role="status" class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-sm text-slate-300">Cargando datos de la planilla…</p>
     <div id="charts-wrapper" class="space-y-6">
       <section id="card-diego" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-lg font-bold text-slate-200 sm:text-xl">EVOLUCION MENSUAL DE CONSUMOS</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-sm text-slate-400">Titular</span></div>
+        <div class="mb-3 flex items-center justify-between gap-3"><h2 class="text-lg font-bold text-slate-200 sm:text-xl">EVOLUCIÓN MENSUAL DE CONSUMOS</h2><span class="rounded-full border border-slate-700 bg-slate-800 px-2.5 py-1 text-sm text-slate-400">Diego</span></div>
         <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">El streamgraph representa la evolución mensual de los consumos de Diego por categoría. El ancho de cada banda refleja el monto acumulado de esa categoría en cada mes y permite observar cómo cambia la distribución de los gastos a lo largo del período. Los montos se expresan en miles y las devoluciones se muestran por su magnitud.</p>
         <div id="chart-diego" class="chart-area relative w-full"></div>
       </section>
     </div>
-
-    <section class="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6">
-      <h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-300 sm:text-base">Leyenda unificada de categorías</h2>
-      <div id="legend-container" class="flex flex-wrap gap-2 text-sm"></div>
-    </section>
+    <section class="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6"><h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-300 sm:text-base">Leyenda unificada de categorías</h2><div id="legend-container" class="flex flex-wrap gap-2 text-sm"></div></section>
   </main>
-
-  <div id="tooltip" class="fixed z-50 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-700 bg-slate-900/95 p-3 text-sm text-slate-100 opacity-0 shadow-2xl backdrop-blur-md">
-    <div class="mb-1 flex items-center gap-2"><span id="tt-color" class="inline-block h-3 w-3 rounded-full"></span><span id="tt-category" class="text-base font-bold text-white"></span></div>
-    <div id="tt-period" class="text-slate-300"></div>
-    <div class="mt-1 text-xs italic text-slate-400">Haz clic para seleccionar</div>
-  </div>
-
+  <div id="tooltip" class="fixed z-50 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-700 bg-slate-900/95 p-3 text-sm text-slate-100 opacity-0 shadow-2xl backdrop-blur-md"><div class="mb-1 flex items-center gap-2"><span id="tt-color" class="inline-block h-3 w-3 rounded-full"></span><span id="tt-category" class="text-base font-bold text-white"></span></div><div id="tt-period" class="text-slate-300"></div><div class="mt-1 text-xs italic text-slate-400">Haz clic para seleccionar</div></div>
   <script>
     const workbookUrl = './gastosdetarjetamensual_Final.xlsx';
     const categoryColors = d3.scaleOrdinal(d3.schemeTableau10);
-    let periods = [];
-    let categories = [];
-    let records = [];
-    let chartData = {};
-    let selectedCategory = null;
-
-    function normalizeText(value) {
-      return String(value ?? '').normalize('NFC').trim().replace(/\s+/g, ' ');
-    }
-
-    function monthOrder(period) {
-      const [month, year] = period.split('/').map(Number);
-      return year * 12 + month;
-    }
-
+    const ownerColors = { diego: '#3F334D', ivanna: '#FF4000' };
+    const ownerLabels = { diego: 'Diego H. Giarletta', ivanna: 'Sonia I. Geronovycz' };
+    let periods = [], categories = [], records = [], chartData = {}, selectedCategory = null, selectedHolder = 'all';
+    function normalizeText(value) { return String(value ?? '').normalize('NFC').trim().replace(/\s+/g, ' '); }
+    function monthOrder(period) { const [month, year] = period.split('/').map(Number); return year * 12 + month; }
     function parseOperationDate(value, rowNumber) {
       const match = normalizeText(value).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
       if (!match) throw new Error(`Fila ${rowNumber}: fecha de operación inválida.`);
-      const [, dayText, monthText, yearText] = match;
-      const day = Number(dayText);
-      const month = Number(monthText);
-      const year = Number(yearText);
-      const date = new Date(Date.UTC(year, month - 1, day));
-      if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) {
-        throw new Error(`Fila ${rowNumber}: fecha de operación inválida.`);
-      }
+      const [, dayText, monthText, yearText] = match, day = Number(dayText), month = Number(monthText), year = Number(yearText), date = new Date(Date.UTC(year, month - 1, day));
+      if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) throw new Error(`Fila ${rowNumber}: fecha de operación inválida.`);
       return { operationDate: `${dayText}/${monthText}/${yearText}`, period: `${monthText}/${yearText}` };
     }
-
     function ownerFromCell(value) {
       const owner = normalizeText(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
       if (owner.includes('GIARLETTA') || owner.includes('DIEGO')) return 'diego';
       if (owner.includes('GERONOVYCZ') || owner.includes('SONIA')) return 'ivanna';
       throw new Error(`Titular no reconocido en la planilla: ${value}`);
     }
-
     function aggregateRows(rows) {
       const totals = new Map();
-      for (const row of rows) {
-        const key = `${row.period}\u0000${row.category}`;
-        totals.set(key, (totals.get(key) || 0) + Math.abs(row.amount));
-      }
-      return periods.map(period => {
-        const result = { period };
-        for (const category of categories) result[category] = totals.get(`${period}\u0000${category}`) || 0;
-        return result;
-      });
+      for (const row of rows) { const key = `${row.period}\u0000${row.category}`; totals.set(key, (totals.get(key) || 0) + Math.abs(row.amount)); }
+      return periods.map(period => { const result = { period }; for (const category of categories) result[category] = totals.get(`${period}\u0000${category}`) || 0; return result; });
     }
-
     async function loadWorkbook() {
       const status = document.getElementById('dataset-status');
       try {
         const response = await fetch(workbookUrl);
         if (!response.ok) throw new Error(`No se pudo descargar la planilla (HTTP ${response.status}).`);
-        const workbook = XLSX.read(await response.arrayBuffer(), { type: 'array' });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
+        const workbook = XLSX.read(await response.arrayBuffer(), { type: 'array' }), sheet = workbook.Sheets[workbook.SheetNames[0]];
         if (!sheet) throw new Error('La planilla no contiene hojas con datos.');
         const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
         records = rows.slice(1).filter(row => row.some(value => value !== '')).map((row, index) => {
-          const rowNumber = index + 2;
-          const { operationDate, period } = parseOperationDate(row[0], rowNumber);
-          const holder = ownerFromCell(row[1]);
-          const category = normalizeText(row[4]);
-          const amount = Number(row[5]);
-          if (!category || !Number.isFinite(amount)) {
-            throw new Error(`Fila ${rowNumber}: categoría o monto inválido.`);
-          }
+          const rowNumber = index + 2, { operationDate, period } = parseOperationDate(row[0], rowNumber), holder = ownerFromCell(row[1]), category = normalizeText(row[4]), amount = Number(row[5]);
+          if (!category || !Number.isFinite(amount)) throw new Error(`Fila ${rowNumber}: categoría o monto inválido.`);
           return { operationDate, period, holder, category, amount };
         });
         if (!records.length) throw new Error('La planilla no contiene transacciones para mostrar.');
-
         periods = [...new Set(records.map(row => row.period))].sort((a, b) => monthOrder(a) - monthOrder(b));
         categories = [...new Set(records.map(row => row.category))].sort((a, b) => a.localeCompare(b, 'es'));
         categoryColors.domain(categories);
-        chartData = {
-          diego: aggregateRows(records.filter(row => row.holder === 'diego'))
-        };
-        buildLegend();
-        renderAllCharts();
-        status.classList.add('hidden');
+        chartData = { diego: aggregateRows(records.filter(row => row.holder === 'diego')) };
+        buildLegend(); renderAllCharts(); status.classList.add('hidden');
       } catch (error) {
         console.error('Error al cargar los datos de gastos:', error);
         status.textContent = `No se pudieron cargar los datos: ${error.message}`;
         status.className = 'rounded-xl border border-red-900 bg-red-950/60 p-3 text-sm text-red-200';
       }
     }
-
+    function positiveRows() { return records.filter(row => row.amount > 0 && !/bonificaci[oó]n|devoluci[oó]n/i.test(row.category)); }
+    function holderCategoryTotals() {
+      const totals = new Map();
+      for (const row of positiveRows()) {
+        const key = `${row.holder}\u0000${row.category}`;
+        totals.set(key, (totals.get(key) || 0) + row.amount);
+      }
+      return totals;
+    }
+    function renderRadialChart(totals, visibleHolders, chartCategories) {
+      const container = d3.select('#radial-chart').html(''), width = 760, height = 560, radius = 218;
+      if (!chartCategories.length || !visibleHolders.length) return;
+      const hierarchyData = { name: 'Consumos', children: visibleHolders.map(holder => ({ name: ownerLabels[holder], holder, children: chartCategories.map(category => ({ name: category, holder, value: totals.get(`${holder}\u0000${category}`) || 0 })) })) };
+      const root = d3.hierarchy(hierarchyData).sum(node => node.value || 0).sort((a, b) => d3.ascending(a.data.name, b.data.name));
+      d3.cluster().size([2 * Math.PI, radius])(root);
+      const svg = container.append('svg').attr('class', 'comparison-svg').attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', 'Gráfico jerárquico radial de montos por titular y categoría');
+      const group = svg.append('g').attr('transform', `translate(${width / 2},${height / 2})`);
+      group.append('g').attr('fill', 'none').attr('stroke', '#64748b').attr('stroke-opacity', 0.42).selectAll('path').data(root.links()).join('path').attr('d', d3.linkRadial().angle(d => d.x).radius(d => d.y));
+      group.append('g').selectAll('circle').data(root.descendants().slice(1)).join('circle').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`).attr('r', d => d.children ? 3 : 4).attr('fill', d => ownerColors[d.data.holder] || '#94a3b8').append('title').text(d => d.children ? d.data.name : `${d.data.name} — ${ownerLabels[d.data.holder]}: ${(d.data.value || 0).toLocaleString('es-AR')} miles`);
+      group.append('g').selectAll('text').data(root.descendants().slice(1)).join('text').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y + 7},0)${d.x >= Math.PI ? ' rotate(180)' : ''}`).attr('text-anchor', d => d.x < Math.PI ? 'start' : 'end').attr('dy', '0.32em').attr('fill', d => d.children ? '#e2e8f0' : '#cbd5e1').attr('font-size', d => d.children ? '10px' : '8px').text(d => d.data.name).append('title').text(d => d.data.name);
+    }
+    function renderParticipationChart(totals, visibleHolders, chartCategories) {
+      const container = d3.select('#participation-chart').html(''), width = Math.max(360, container.node().clientWidth), margin = { top: 24, right: 48, bottom: 42, left: 164 }, rowHeight = 30, height = margin.top + margin.bottom + chartCategories.length * rowHeight;
+      if (!chartCategories.length || !visibleHolders.length) return;
+      const chartTotals = new Map(visibleHolders.map(holder => [holder, d3.sum(chartCategories, category => totals.get(`${holder}\u0000${category}`) || 0)]));
+      const maxPercent = d3.max(visibleHolders, holder => d3.max(chartCategories, category => 100 * (totals.get(`${holder}\u0000${category}`) || 0) / (chartTotals.get(holder) || 1))) || 1;
+      const x = d3.scaleLinear().domain([0, Math.ceil(maxPercent / 5) * 5]).nice().range([margin.left, width - margin.right]);
+      const svg = container.append('svg').attr('class', 'comparison-svg').attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', 'Porcentaje del gasto positivo por categoría y titular');
+      const axis = svg.append('g').attr('transform', `translate(0,${height - margin.bottom})`).call(d3.axisBottom(x).ticks(5).tickFormat(value => `${value}%`));
+      axis.selectAll('text').attr('fill', '#cbd5e1'); axis.selectAll('line,path').attr('stroke', '#64748b');
+      svg.append('text').attr('x', margin.left).attr('y', 14).attr('fill', '#cbd5e1').attr('font-size', 11).text('Participación del gasto positivo de cada titular');
+      const rows = svg.append('g').selectAll('g').data(chartCategories).join('g').attr('transform', (category, i) => `translate(0,${margin.top + i * rowHeight})`);
+      rows.append('text').attr('x', margin.left - 10).attr('y', rowHeight / 2).attr('text-anchor', 'end').attr('dominant-baseline', 'middle').attr('fill', '#e2e8f0').attr('font-size', 10).text(category => category);
+      const barHeight = visibleHolders.length === 1 ? 14 : 10, gap = visibleHolders.length === 1 ? 0 : 2;
+      rows.selectAll('rect').data(category => visibleHolders.map((holder, index) => { const amount = totals.get(`${holder}\u0000${category}`) || 0; return { category, holder, index, value: 100 * amount / (chartTotals.get(holder) || 1) }; })).join('rect').attr('x', x(0)).attr('y', d => (rowHeight - (visibleHolders.length * barHeight + (visibleHolders.length - 1) * gap)) / 2 + d.index * (barHeight + gap)).attr('width', d => Math.max(0, x(d.value) - x(0))).attr('height', barHeight).attr('rx', 2).attr('fill', d => ownerColors[d.holder]).append('title').text(d => `${d.category} · ${ownerLabels[d.holder]}: ${d.value.toFixed(2)}%`);
+      rows.selectAll('.value-label').data(category => visibleHolders.map((holder, index) => { const amount = totals.get(`${holder}\u0000${category}`) || 0; return { category, holder, index, value: 100 * amount / (chartTotals.get(holder) || 1) }; })).join('text').attr('class', 'value-label').attr('x', d => d.value > 0 ? Math.min(width - 5, x(d.value) + 4) : x(0) + 4).attr('y', d => (rowHeight - (visibleHolders.length * barHeight + (visibleHolders.length - 1) * gap)) / 2 + d.index * (barHeight + gap) + barHeight / 2).attr('dominant-baseline', 'middle').attr('fill', '#f8fafc').attr('font-size', 9).text(d => `${d.value.toFixed(2)}%`);
+      const legend = svg.append('g').attr('transform', `translate(${margin.left},${height - 12})`);
+      visibleHolders.forEach((holder, i) => { const xPos = i * 165; legend.append('rect').attr('x', xPos).attr('y', -9).attr('width', 10).attr('height', 10).attr('fill', ownerColors[holder]); legend.append('text').attr('x', xPos + 15).attr('y', 0).attr('fill', '#cbd5e1').attr('font-size', 10).text(ownerLabels[holder]); });
+    }
+    function renderComparisonCharts() {
+      if (!records.length) return;
+      const totals = holderCategoryTotals(), chartCategories = [...new Set(positiveRows().map(row => row.category))].sort((a, b) => a.localeCompare(b, 'es'));
+      const visibleHolders = selectedHolder === 'all' ? ['diego', 'ivanna'] : [selectedHolder];
+      renderRadialChart(totals, visibleHolders, chartCategories);
+      renderParticipationChart(totals, visibleHolders, chartCategories);
+    }
     function buildLegend() {
       const container = d3.select('#legend-container').html('');
       categories.forEach(category => {
-        const item = container.append('button')
-          .attr('type', 'button')
-          .attr('class', 'legend-item flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1.5 text-sm transition hover:border-slate-600')
-          .attr('data-category', category)
-          .on('click', () => selectCategory(category));
-        item.append('span').attr('class', 'inline-block h-3 w-3 rounded-md').style('background-color', categoryColors(category));
-        item.append('span').attr('class', 'font-medium text-slate-200').text(category);
+        const item = container.append('button').attr('type', 'button').attr('class', 'legend-item flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900 px-2.5 py-1.5 text-sm transition hover:border-slate-600').attr('data-category', category).on('click', () => selectCategory(category));
+        item.append('span').attr('class', 'inline-block h-3 w-3 rounded-md').style('background-color', categoryColors(category)); item.append('span').attr('class', 'font-medium text-slate-200').text(category);
       });
     }
-
     function renderStreamgraph(containerId, data) {
-      const container = d3.select(containerId).html('');
-      const node = container.node();
-      const width = node.clientWidth;
-      const height = node.clientHeight;
+      const container = d3.select(containerId).html(''), node = container.node(), width = node.clientWidth, height = node.clientHeight;
       if (!width || !height || !data.length) return;
-      const margin = { top: 12, right: 12, bottom: 36, left: 12 };
-      const innerWidth = width - margin.left - margin.right;
-      const innerHeight = height - margin.top - margin.bottom;
-      const series = d3.stack().keys(categories).offset(d3.stackOffsetWiggle).order(d3.stackOrderInsideOut)(data);
-      const xScale = d3.scalePoint().domain(periods).range([0, innerWidth]);
-      const yMin = d3.min(series, layer => d3.min(layer, point => point[0]));
-      const yMax = d3.max(series, layer => d3.max(layer, point => point[1]));
-      const yScale = d3.scaleLinear().domain([yMin, yMax]).range([innerHeight, 0]);
-      const area = d3.area().x(point => xScale(point.data.period)).y0(point => yScale(point[0])).y1(point => yScale(point[1])).curve(d3.curveCatmullRom.alpha(0.5));
-      const svg = container.append('svg').attr('width', width).attr('height', height).attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', 'Streamgraph de gastos por categoría y período');
-      const group = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
-      group.selectAll('.stream-path').data(series).join('path')
-        .attr('class', 'stream-path').attr('d', area).attr('fill', layer => categoryColors(layer.key)).attr('data-category', layer => layer.key)
-        .style('opacity', layer => selectedCategory === null || selectedCategory === layer.key ? 0.9 : 0.12)
-        .on('mouseover', function(event, layer) {
-          showTooltip(event, layer.key);
-          if (selectedCategory === null) highlightCategory(layer.key);
-        })
-        .on('mousemove', moveTooltip)
-        .on('mouseout', () => { hideTooltip(); if (selectedCategory === null) resetCategoryHighlights(); })
-        .on('click', (event, layer) => selectCategory(layer.key));
-      const axis = group.append('g').attr('transform', `translate(0,${innerHeight + 2})`).call(d3.axisBottom(xScale).tickSize(-innerHeight).tickPadding(12));
-      axis.select('.domain').remove();
-      axis.selectAll('.tick line').attr('stroke', 'rgba(255,255,255,.08)').attr('stroke-dasharray', '3,3');
-      axis.selectAll('.tick text').attr('fill', '#cbd5e1').attr('font-size', '14px').attr('font-weight', '500');
+      const margin = { top: 12, right: 12, bottom: 36, left: 12 }, innerWidth = width - margin.left - margin.right, innerHeight = height - margin.top - margin.bottom;
+      const series = d3.stack().keys(categories).offset(d3.stackOffsetWiggle).order(d3.stackOrderInsideOut)(data), xScale = d3.scalePoint().domain(periods).range([0, innerWidth]), yMin = d3.min(series, layer => d3.min(layer, point => point[0])), yMax = d3.max(series, layer => d3.max(layer, point => point[1])), yScale = d3.scaleLinear().domain([yMin, yMax]).range([innerHeight, 0]), area = d3.area().x(point => xScale(point.data.period)).y0(point => yScale(point[0])).y1(point => yScale(point[1])).curve(d3.curveCatmullRom.alpha(0.5));
+      const svg = container.append('svg').attr('width', width).attr('height', height).attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', 'Streamgraph de gastos por categoría y período'), group = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+      group.selectAll('.stream-path').data(series).join('path').attr('class', 'stream-path').attr('d', area).attr('fill', layer => categoryColors(layer.key)).attr('data-category', layer => layer.key).style('opacity', layer => selectedCategory === null || selectedCategory === layer.key ? 0.9 : 0.12).on('mouseover', function(event, layer) { showTooltip(event, layer.key); if (selectedCategory === null) highlightCategory(layer.key); }).on('mousemove', moveTooltip).on('mouseout', () => { hideTooltip(); if (selectedCategory === null) resetCategoryHighlights(); }).on('click', (event, layer) => selectCategory(layer.key));
+      const axis = group.append('g').attr('transform', `translate(0,${innerHeight + 2})`).call(d3.axisBottom(xScale).tickSize(-innerHeight).tickPadding(12)); axis.select('.domain').remove(); axis.selectAll('.tick line').attr('stroke', 'rgba(255,255,255,.08)').attr('stroke-dasharray', '3,3'); axis.selectAll('.tick text').attr('fill', '#cbd5e1').attr('font-size', '14px').attr('font-weight', '500');
     }
-
-    function renderAllCharts() {
-      if (periods.length) renderStreamgraph('#chart-diego', chartData.diego);
-    }
-
-    function selectCategory(category) {
-      if (selectedCategory === category) return clearSelection();
-      selectedCategory = category;
-      highlightCategory(category);
-    }
-
-    function clearSelection() {
-      selectedCategory = null;
-      resetCategoryHighlights();
-    }
-
-    function highlightCategory(category) {
-      d3.selectAll('.stream-path').style('opacity', function() { return d3.select(this).attr('data-category') === category ? 1 : 0.12; });
-      d3.selectAll('.legend-item').style('opacity', function() { return d3.select(this).attr('data-category') === category ? 1 : 0.3; });
-    }
-
-    function resetCategoryHighlights() {
-      d3.selectAll('.stream-path').style('opacity', 0.9);
-      d3.selectAll('.legend-item').style('opacity', 1);
-    }
-
-    function showTooltip(event, category) {
-      d3.select('#tt-color').style('background-color', categoryColors(category));
-      d3.select('#tt-category').text(category);
-      d3.select('#tt-period').text(`Período: ${periods[0]} – ${periods[periods.length - 1]}`);
-      d3.select('#tooltip').style('opacity', 1);
-      moveTooltip(event);
-    }
-
-    function moveTooltip(event) {
-      d3.select('#tooltip').style('left', event.clientX + 'px').style('top', event.clientY + 'px');
-    }
-
-    function hideTooltip() {
-      d3.select('#tooltip').style('opacity', 0);
-    }
-
+    function renderAllCharts() { if (periods.length) renderStreamgraph('#chart-diego', chartData.diego); renderComparisonCharts(); }
+    function selectCategory(category) { if (selectedCategory === category) return clearSelection(); selectedCategory = category; highlightCategory(category); }
+    function clearSelection() { selectedCategory = null; resetCategoryHighlights(); }
+    function highlightCategory(category) { d3.selectAll('.stream-path').style('opacity', function() { return d3.select(this).attr('data-category') === category ? 1 : 0.12; }); d3.selectAll('.legend-item').style('opacity', function() { return d3.select(this).attr('data-category') === category ? 1 : 0.3; }); }
+    function resetCategoryHighlights() { d3.selectAll('.stream-path').style('opacity', 0.9); d3.selectAll('.legend-item').style('opacity', 1); }
+    function showTooltip(event, category) { d3.select('#tt-color').style('background-color', categoryColors(category)); d3.select('#tt-category').text(category); d3.select('#tt-period').text(`Período: ${periods[0]} – ${periods[periods.length - 1]}`); d3.select('#tooltip').style('opacity', 1); moveTooltip(event); }
+    function moveTooltip(event) { d3.select('#tooltip').style('left', event.clientX + 'px').style('top', event.clientY + 'px'); }
+    function hideTooltip() { d3.select('#tooltip').style('opacity', 0); }
+    d3.selectAll('.filter-button').on('click', function() { selectedHolder = this.dataset.holder; d3.selectAll('.filter-button').attr('aria-pressed', button => button.dataset.holder === selectedHolder ? 'true' : 'false'); renderComparisonCharts(); });
     let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(renderAllCharts, 150);
-    });
+    window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderAllCharts(); }, 150); });
     loadWorkbook();
   </script>
 </body>
