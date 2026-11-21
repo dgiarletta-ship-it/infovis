@@ -105,7 +105,7 @@
         <div class="mt-4 rounded-xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6"><h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-300 sm:text-base">FILTRO UNIFICADO DE CATEGORÍAS</h3><div id="legend-container" class="flex flex-wrap gap-2 text-sm"></div></div>
       </section>
     </div>
-    <section id="flourish-monthly-chart" aria-labelledby="flourish-monthly-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
+    <section id="category-heatmap-section" aria-labelledby="category-heatmap-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">       <h2 id="category-heatmap-title" class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">FRECUENCIA DE COMPRAS POR CATEGORÍA Y MES</h2>       <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">Cada celda muestra la cantidad de transacciones de una categoría en un mes. El color va de naranja claro (pocas compras) a rojo intenso (muchas); las celdas vacías indican que no hubo transacciones.</p>       <div id="category-heatmap-chart" aria-label="Mapa de calor de transacciones por categoría y mes"></div>     </section>     <section id="flourish-monthly-chart" aria-labelledby="flourish-monthly-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
       <h2 id="flourish-monthly-title" class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">MONTO TOTAL POR MES</h2>
       <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">Visualización de Flourish con los montos mensuales del archivo <a class="underline" href="./gasto_mensual_flourish.csv">gasto_mensual_flourish.csv</a>. Este gráfico muestra las series del archivo y no cambia con el filtro general de titulares.</p>
       <div class="flourish-embed flourish-chart flourish-version--dark" data-src="visualisation/30990651"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/30990651/thumbnail" width="100%" alt="Gráfico del monto total por mes" /></noscript></div>       <div class="flourish-version--light" style="width: 100%; height: 600px;"><iframe src="https://flo.uri.sh/visualisation/30990783/embed?auto=1" title="Gráfico del monto total por mes (modo claro)" style="width: 100%; height: 600px; border: 0;" loading="lazy" allowfullscreen></iframe></div>
@@ -114,7 +114,7 @@
   </main>
   <div id="tooltip" class="fixed z-50 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-700 bg-slate-900/95 p-3 text-sm text-slate-100 opacity-0 shadow-2xl backdrop-blur-md"><div class="mb-1 flex items-center gap-2"><span id="tt-color" class="inline-block h-3 w-3 rounded-full"></span><span id="tt-category" class="text-base font-bold text-white"></span></div><div id="tt-period" class="text-slate-300"></div><div id="tt-value" class="mt-1 font-semibold text-slate-100"></div><div class="mt-1 text-xs italic text-slate-400">Haz clic para seleccionar</div></div>
   <script>
-    const workbookUrl = './gastosdetarjetamensual_Final.xlsx';
+</script>   <script src="./category-heatmap.js"></script>   <script>     const workbookUrl = './gastosdetarjetamensual_Final.xlsx';
     const categoryColors = d3.scaleOrdinal(d3.schemeTableau10);
     const ownerColors = { diego: '#38BDF8', ivanna: '#FF4000' };
     const ownerLabels = { diego: 'Diego H. Giarletta', ivanna: 'Ivanna I. Geronovycz' };
@@ -250,7 +250,7 @@
         const monthlyData = aggregateRows(holderRows);
         renderStreamgraph('#chart-total', monthlyData);
       }
-      renderComparisonCharts();
+      renderComparisonCharts();       if (window.renderCategoryHeatmap) {         const heatmapRows = selectedHolder === 'all' ? records : records.filter(row => row.holder === selectedHolder);         window.renderCategoryHeatmap(heatmapRows, categories, periods);       }
     }
     function selectCategory(category) { if (selectedCategory === category) return clearSelection(); selectedCategory = category; highlightCategory(category); }
     function clearSelection() { selectedCategory = null; resetCategoryHighlights(); }
