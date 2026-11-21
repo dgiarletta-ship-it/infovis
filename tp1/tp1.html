@@ -31,10 +31,10 @@
   <main class="mx-auto w-full max-w-none space-y-6 p-4 sm:p-6 lg:p-8">
     <section aria-labelledby="current-situation-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
       <h2 id="current-situation-title" class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">SITUACIÓN ACTUAL DE LOS CONSUMOS</h2>
-      <p class="mb-5 max-w-5xl text-sm leading-relaxed text-slate-300">Durante el período analizado se registraron 560 transacciones. Diego H. Giarletta concentra el 57,30 % de los gastos positivos y Sonia I. Geronovycz el 42,70 %. Los porcentajes se calculan sobre el gasto positivo total de ambos titulares; las bonificaciones y devoluciones se excluyen.</p>
+      <p class="mb-5 max-w-5xl text-sm leading-relaxed text-slate-300">Durante el período analizado se registraron 560 transacciones. Diego H. Giarletta concentra el 57,30 % de los gastos positivos e Ivanna I. Geronovycz el 42,70 %. Los porcentajes se calculan sobre el gasto positivo total de ambos titulares; las bonificaciones y devoluciones se excluyen.</p>
       <div class="grid gap-4 md:grid-cols-2">
-        <article class="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4"><h3 class="text-base font-bold text-slate-100">DIEGO H. GIARLETTA</h3><p class="mt-1 text-sm text-slate-300"><span class="font-semibold text-white">310 transacciones</span> · 57,30 % del gasto positivo total</p><p class="mt-2 text-sm leading-relaxed text-slate-300">Sus consumos se concentran principalmente en comida, servicios (luz y gas), telefonía y combustible.</p></article>
-        <article class="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4"><h3 class="text-base font-bold text-slate-100">SONIA I. GERONOVYCZ</h3><p class="mt-1 text-sm text-slate-300"><span class="font-semibold text-white">250 transacciones</span> · 42,70 % del gasto positivo total</p><p class="mt-2 text-sm leading-relaxed text-slate-300">Sus consumos se concentran principalmente en ropa, comida y transporte.</p></article>
+        <article class="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4"><h3 class="text-base font-bold" style="color: #38BDF8">DIEGO H. GIARLETTA</h3><p class="mt-1 text-sm text-slate-300"><span class="font-semibold text-white">310 transacciones</span> · 57,30 % del gasto positivo total</p><p class="mt-2 text-sm leading-relaxed text-slate-300">Sus consumos se concentran principalmente en comida, servicios (luz y gas), telefonía y combustible.</p></article>
+        <article class="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4"><h3 class="text-base font-bold" style="color: #FF4000">IVANNA I. GERONOVYCZ</h3><p class="mt-1 text-sm text-slate-300"><span class="font-semibold text-white">250 transacciones</span> · 42,70 % del gasto positivo total</p><p class="mt-2 text-sm leading-relaxed text-slate-300">Sus consumos se concentran principalmente en ropa, comida y transporte.</p></article>
       </div>
     </section>
     <section aria-labelledby="comparison-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
@@ -43,8 +43,8 @@
       <div class="mb-6 flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar los gráficos por titular">
         <span class="mr-1 text-sm font-medium text-slate-300">Titular:</span>
         <button type="button" class="filter-button rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-200" data-holder="all" aria-pressed="true">Todos</button>
-        <button type="button" class="filter-button rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-200" data-holder="diego" aria-pressed="false">Diego</button>
-        <button type="button" class="filter-button rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-200" data-holder="ivanna" aria-pressed="false">Sonia</button>
+        <button type="button" class="filter-button rounded-lg border border-slate-600 px-3 py-1.5 text-sm" style="color: #38BDF8" data-holder="diego" aria-pressed="false">Diego</button>
+        <button type="button" class="filter-button rounded-lg border border-slate-600 px-3 py-1.5 text-sm" style="color: #FF4000" data-holder="ivanna" aria-pressed="false">Ivanna</button>
       </div>
       <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
         <div class="min-w-0"><h3 class="mb-3 text-base font-bold text-slate-200 sm:text-lg">GRÁFICO JERÁRQUICO RADIAL</h3><div id="radial-chart" aria-label="Gráfico jerárquico radial"></div></div>
@@ -65,8 +65,8 @@
   <script>
     const workbookUrl = './gastosdetarjetamensual_Final.xlsx';
     const categoryColors = d3.scaleOrdinal(d3.schemeTableau10);
-    const ownerColors = { diego: '#3F334D', ivanna: '#FF4000' };
-    const ownerLabels = { diego: 'Diego H. Giarletta', ivanna: 'Sonia I. Geronovycz' };
+    const ownerColors = { diego: '#38BDF8', ivanna: '#FF4000' };
+    const ownerLabels = { diego: 'Diego H. Giarletta', ivanna: 'Ivanna I. Geronovycz' };
     let periods = [], categories = [], records = [], chartData = [], selectedCategory = null, selectedHolder = 'all';
     function normalizeText(value) { return String(value ?? '').normalize('NFC').trim().replace(/\s+/g, ' '); }
     function normalizeCategory(value) { return normalizeText(value).replace(/\s+(?:Diego|Ivanna)$/i, '').trim(); }
@@ -81,7 +81,7 @@
     function ownerFromCell(value) {
       const owner = normalizeText(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
       if (owner.includes('GIARLETTA') || owner.includes('DIEGO')) return 'diego';
-      if (owner.includes('GERONOVYCZ') || owner.includes('SONIA')) return 'ivanna';
+      if (owner.includes('GERONOVYCZ') || owner.includes('SONIA') || owner.includes('IVANNA')) return 'ivanna';
       throw new Error(`Titular no reconocido en la planilla: ${value}`);
     }
     function aggregateRows(rows) {
@@ -149,7 +149,7 @@
       const group = svg.append('g').attr('transform', `translate(${width / 2},${height / 2})`);
       group.append('g').attr('fill', 'none').attr('stroke', '#64748b').attr('stroke-opacity', 0.42).selectAll('path').data(root.links()).join('path').attr('d', d3.linkRadial().angle(d => d.x).radius(d => d.y));
       group.append('g').selectAll('circle').data(root.descendants().slice(1)).join('circle').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`).attr('r', d => d.children ? 3 : 4).attr('fill', d => ownerColors[d.data.holder] || '#94a3b8').append('title').text(radialNodeDescription);
-      group.append('g').selectAll('text').data(root.descendants().slice(1)).join('text').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y + 7},0)${d.x >= Math.PI ? ' rotate(180)' : ''}`).attr('text-anchor', d => d.x < Math.PI ? 'start' : 'end').attr('dy', '0.32em').attr('fill', d => d.children ? '#e2e8f0' : '#cbd5e1').attr('font-size', d => d.children ? '10px' : '8px').text(d => d.data.name).append('title').text(radialNodeDescription);
+      group.append('g').selectAll('text').data(root.descendants().slice(1)).join('text').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y + 7},0)${d.x >= Math.PI ? ' rotate(180)' : ''}`).attr('text-anchor', d => d.x < Math.PI ? 'start' : 'end').attr('dy', '0.32em').attr('fill', d => d.depth === 1 ? ownerColors[d.data.holder] : '#cbd5e1').attr('font-size', d => d.children ? '10px' : '8px').text(d => d.data.name).append('title').text(radialNodeDescription);
       group.selectAll('text').filter(d => !d.children).on('mouseover', showRadialTooltip).on('mousemove', moveTooltip).on('mouseout', hideTooltip);
       group.selectAll('circle').filter(d => !d.children).on('mouseover', showRadialTooltip).on('mousemove', moveTooltip).on('mouseout', hideTooltip);
     }
@@ -169,7 +169,7 @@
       rows.selectAll('rect').data(category => visibleHolders.map((holder, index) => { const amount = totals.get(`${holder}\u0000${category}`) || 0; return { category, holder, index, value: 100 * amount / (chartTotals.get(holder) || 1) }; })).join('rect').attr('x', x(0)).attr('y', d => (rowHeight - (visibleHolders.length * barHeight + (visibleHolders.length - 1) * gap)) / 2 + d.index * (barHeight + gap)).attr('width', d => Math.max(0, x(d.value) - x(0))).attr('height', barHeight).attr('rx', 2).attr('fill', d => ownerColors[d.holder]).append('title').text(d => `${d.category} · ${ownerLabels[d.holder]}: ${d.value.toFixed(2)}%`);
       rows.selectAll('.value-label').data(category => visibleHolders.map((holder, index) => { const amount = totals.get(`${holder}\u0000${category}`) || 0; return { category, holder, index, value: 100 * amount / (chartTotals.get(holder) || 1) }; })).join('text').attr('class', 'value-label').attr('x', d => d.value > 0 ? Math.min(width - 5, x(d.value) + 4) : x(0) + 4).attr('y', d => (rowHeight - (visibleHolders.length * barHeight + (visibleHolders.length - 1) * gap)) / 2 + d.index * (barHeight + gap) + barHeight / 2).attr('dominant-baseline', 'middle').attr('fill', '#f8fafc').attr('font-size', 9).text(d => `${d.value.toFixed(2)}%`);
       const legend = svg.append('g').attr('transform', `translate(${margin.left},${height - 12})`);
-      visibleHolders.forEach((holder, i) => { const xPos = i * 165; legend.append('rect').attr('x', xPos).attr('y', -9).attr('width', 10).attr('height', 10).attr('fill', ownerColors[holder]); legend.append('text').attr('x', xPos + 15).attr('y', 0).attr('fill', '#cbd5e1').attr('font-size', 10).text(ownerLabels[holder]); });
+      visibleHolders.forEach((holder, i) => { const xPos = i * 165; legend.append('rect').attr('x', xPos).attr('y', -9).attr('width', 10).attr('height', 10).attr('fill', ownerColors[holder]); legend.append('text').attr('x', xPos + 15).attr('y', 0).attr('fill', ownerColors[holder]).attr('font-size', 10).text(ownerLabels[holder]); });
     }
     function renderComparisonCharts() {
       if (!records.length) return;
