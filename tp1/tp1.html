@@ -61,7 +61,7 @@
     </div>
     <section class="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6"><h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-300 sm:text-base">Leyenda unificada de categorías</h2><div id="legend-container" class="flex flex-wrap gap-2 text-sm"></div></section>
   </main>
-  <div id="tooltip" class="fixed z-50 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-700 bg-slate-900/95 p-3 text-sm text-slate-100 opacity-0 shadow-2xl backdrop-blur-md"><div class="mb-1 flex items-center gap-2"><span id="tt-color" class="inline-block h-3 w-3 rounded-full"></span><span id="tt-category" class="text-base font-bold text-white"></span></div><div id="tt-period" class="text-slate-300"></div><div class="mt-1 text-xs italic text-slate-400">Haz clic para seleccionar</div></div>
+  <div id="tooltip" class="fixed z-50 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-700 bg-slate-900/95 p-3 text-sm text-slate-100 opacity-0 shadow-2xl backdrop-blur-md"><div class="mb-1 flex items-center gap-2"><span id="tt-color" class="inline-block h-3 w-3 rounded-full"></span><span id="tt-category" class="text-base font-bold text-white"></span></div><div id="tt-period" class="text-slate-300"></div><div id="tt-value" class="mt-1 font-semibold text-slate-100"></div><div class="mt-1 text-xs italic text-slate-400">Haz clic para seleccionar</div></div>
   <script>
     const workbookUrl = './gastosdetarjetamensual_Final.xlsx';
     const categoryColors = d3.scaleOrdinal(d3.schemeTableau10);
@@ -175,7 +175,7 @@
       const margin = { top: 12, right: 12, bottom: 36, left: 12 }, innerWidth = width - margin.left - margin.right, innerHeight = height - margin.top - margin.bottom;
       const series = d3.stack().keys(categories).offset(d3.stackOffsetWiggle).order(d3.stackOrderInsideOut)(data), xScale = d3.scalePoint().domain(periods).range([0, innerWidth]), yMin = d3.min(series, layer => d3.min(layer, point => point[0])), yMax = d3.max(series, layer => d3.max(layer, point => point[1])), yScale = d3.scaleLinear().domain([yMin, yMax]).range([innerHeight, 0]), area = d3.area().x(point => xScale(point.data.period)).y0(point => yScale(point[0])).y1(point => yScale(point[1])).curve(d3.curveCatmullRom.alpha(0.5));
       const svg = container.append('svg').attr('width', width).attr('height', height).attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', 'Streamgraph de gastos por categoría y período'), group = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
-      group.selectAll('.stream-path').data(series).join('path').attr('class', 'stream-path').attr('d', area).attr('fill', layer => categoryColors(layer.key)).attr('data-category', layer => layer.key).style('opacity', layer => selectedCategory === null || selectedCategory === layer.key ? 0.9 : 0.12).on('mouseover', function(event, layer) { showTooltip(event, layer.key); if (selectedCategory === null) highlightCategory(layer.key); }).on('mousemove', moveTooltip).on('mouseout', () => { hideTooltip(); if (selectedCategory === null) resetCategoryHighlights(); }).on('click', (event, layer) => selectCategory(layer.key));
+      group.selectAll('.stream-path').data(series).join('path').attr('class', 'stream-path').attr('d', area).attr('fill', layer => categoryColors(layer.key)).attr('data-category', layer => layer.key).style('opacity', layer => selectedCategory === null || selectedCategory === layer.key ? 0.9 : 0.12).on('mouseover', function(event, layer) { showTooltip(event, layer, xScale, group); if (selectedCategory === null) highlightCategory(layer.key); }).on('mousemove', (event, layer) => showTooltip(event, layer, xScale, group)).on('mouseout', () => { hideTooltip(); if (selectedCategory === null) resetCategoryHighlights(); }).on('click', (event, layer) => selectCategory(layer.key));
       const axis = group.append('g').attr('transform', `translate(0,${innerHeight + 2})`).call(d3.axisBottom(xScale).tickSize(-innerHeight).tickPadding(12)); axis.select('.domain').remove(); axis.selectAll('.tick line').attr('stroke', 'rgba(255,255,255,.08)').attr('stroke-dasharray', '3,3'); axis.selectAll('.tick text').attr('fill', '#cbd5e1').attr('font-size', '14px').attr('font-weight', '500');
     }
     function renderAllCharts() { if (periods.length) renderStreamgraph('#chart-diego', chartData.diego); renderComparisonCharts(); }
@@ -183,7 +183,18 @@
     function clearSelection() { selectedCategory = null; resetCategoryHighlights(); }
     function highlightCategory(category) { d3.selectAll('.stream-path').style('opacity', function() { return d3.select(this).attr('data-category') === category ? 1 : 0.12; }); d3.selectAll('.legend-item').style('opacity', function() { return d3.select(this).attr('data-category') === category ? 1 : 0.3; }); }
     function resetCategoryHighlights() { d3.selectAll('.stream-path').style('opacity', 0.9); d3.selectAll('.legend-item').style('opacity', 1); }
-    function showTooltip(event, category) { d3.select('#tt-color').style('background-color', categoryColors(category)); d3.select('#tt-category').text(category); d3.select('#tt-period').text(`Período: ${periods[0]} – ${periods[periods.length - 1]}`); d3.select('#tooltip').style('opacity', 1); moveTooltip(event); }
+    function showTooltip(event, layer, xScale, plotGroup) {
+      const [pointerX] = d3.pointer(event, plotGroup.node());
+      const point = d3.least(layer, item => Math.abs(xScale(item.data.period) - pointerX));
+      if (!point) return;
+      const amount = point[1] - point[0];
+      d3.select('#tt-color').style('background-color', categoryColors(layer.key));
+      d3.select('#tt-category').text(layer.key);
+      d3.select('#tt-period').text(`Período: ${point.data.period}`);
+      d3.select('#tt-value').text(`Monto: ${amount.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} miles`);
+      d3.select('#tooltip').style('opacity', 1);
+      moveTooltip(event);
+    }
     function moveTooltip(event) { d3.select('#tooltip').style('left', event.clientX + 'px').style('top', event.clientY + 'px'); }
     function hideTooltip() { d3.select('#tooltip').style('opacity', 0); }
     d3.selectAll('.filter-button').on('click', function() { selectedHolder = this.dataset.holder; d3.selectAll('.filter-button').attr('aria-pressed', function() { return this.dataset.holder === selectedHolder ? 'true' : 'false'; }); renderComparisonCharts(); });
