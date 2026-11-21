@@ -16,16 +16,37 @@
     .chart-area { height: 20rem; }
     .comparison-svg { display: block; width: 100%; height: auto; }
     .filter-button[aria-pressed="true"] { background: #e2e8f0; color: #0f172a; border-color: #e2e8f0; }
+    #theme-toggle { background: #1e293b; color: #f8fafc; border: 1px solid #475569; }
+    body.light-theme { background-color: #f1f5f9; color: #0f172a; }
+    body.light-theme header { background: rgba(255, 255, 255, .94); border-color: #cbd5e1; }
+    body.light-theme main section, body.light-theme article { background-color: #fff; border-color: #cbd5e1; }
+    body.light-theme [class*="bg-slate-900"], body.light-theme [class*="bg-slate-800"] { background-color: #f8fafc; }
+    body.light-theme [class*="text-slate-"], body.light-theme [class~="text-white"] { color: #334155 !important; }
+    body.light-theme [class*="border-slate-"] { border-color: #cbd5e1; }
+    body.light-theme #theme-toggle { background: #fff; color: #0f172a; border-color: #94a3b8; }
+    body.light-theme #tooltip { background: rgba(255,255,255,.97); border-color: #cbd5e1; color: #0f172a; }
+    body.light-theme #tooltip #tt-category, body.light-theme #tooltip #tt-value { color: #0f172a; }
+    body.light-theme #tooltip #tt-period, body.light-theme #tooltip .text-slate-400 { color: #475569 !important; }
+    body.light-theme #radial-chart svg text, body.light-theme #participation-chart svg text, body.light-theme #chart-monthly-total svg text { fill: #334155 !important; }
+    body.light-theme #radial-chart svg text.holder-diego { fill: #0284c7 !important; }
+    body.light-theme #radial-chart svg text.holder-ivanna { fill: #ea580c !important; }
+    body.light-theme #radial-chart svg path { stroke: #94a3b8; }
+    body.light-theme #chart-total svg .tick line, body.light-theme #chart-monthly-total svg .tick line { stroke: rgba(15,23,42,.16) !important; }
+    body.light-theme #chart-total svg .tick text { fill: #334155 !important; }
+    body.light-theme .filter-button[aria-pressed="true"] { background: #cbd5e1; color: #0f172a; }
     @media (max-width: 640px) { .chart-area { height: 17rem; } }
   </style>
 </head>
 <body class="min-h-screen bg-slate-950 text-slate-100">
   <header class="sticky top-0 z-30 border-b border-slate-800 bg-slate-900/90 px-4 py-4 backdrop-blur sm:px-8">
-    <div class="mx-auto max-w-screen-2xl">
-      <h1 class="bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400 bg-clip-text text-xl font-bold text-transparent sm:text-2xl">Trabajo Práctico 1</h1>
-      <p class="text-xs text-slate-400 sm:text-sm">Análisis de compras con tarjeta de crédito (agosto de 2025 – agosto de 2026)</p>
-      <p class="mt-1 text-xs font-medium text-slate-300 sm:text-sm">Alumno: Diego Hernán Giarletta</p>
-      <p class="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300"><strong class="font-semibold text-slate-100">Objetivo:</strong> El siguiente reporte presenta el detalle de los consumos con tarjeta de crédito desde agosto de 2025 hasta agosto de 2026, agrupados por mes de operación.</p>
+    <div class="mx-auto flex max-w-screen-2xl flex-wrap items-center justify-between gap-3">
+      <div>
+        <h1 class="bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400 bg-clip-text text-xl font-bold text-transparent sm:text-2xl">Trabajo Práctico 1</h1>
+        <p class="text-xs text-slate-400 sm:text-sm">Análisis de compras con tarjeta de crédito (agosto de 2025 – agosto de 2026)</p>
+        <p class="mt-1 text-xs font-medium text-slate-300 sm:text-sm">Alumno: Diego Hernán Giarletta</p>
+      </div>
+      <button id="theme-toggle" type="button" class="rounded-lg px-3 py-2 text-sm font-semibold transition hover:opacity-80" aria-label="Cambiar a modo claro" aria-pressed="false">Modo claro</button>
+      <p class="mt-3 w-full max-w-3xl text-sm leading-relaxed text-slate-300"><strong class="font-semibold text-slate-100">Objetivo:</strong> El siguiente reporte presenta el detalle de los consumos con tarjeta de crédito desde agosto de 2025 hasta agosto de 2026, agrupados por mes de operación.</p>
     </div>
   </header>
   <main class="mx-auto w-full max-w-none space-y-6 p-4 sm:p-6 lg:p-8">
@@ -152,7 +173,7 @@
       const group = svg.append('g').attr('transform', `translate(${width / 2},${height / 2})`);
       group.append('g').attr('fill', 'none').attr('stroke', '#64748b').attr('stroke-opacity', 0.42).selectAll('path').data(root.links()).join('path').attr('d', d3.linkRadial().angle(d => d.x).radius(d => d.y));
       group.append('g').selectAll('circle').data(root.descendants().slice(1)).join('circle').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`).attr('r', d => d.children ? 3.5 : 4.5).attr('fill', d => ownerColors[d.data.holder] || '#94a3b8').append('title').text(radialNodeDescription);
-      group.append('g').selectAll('text').data(root.descendants().slice(1)).join('text').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y + 8},0)${d.x >= Math.PI ? ' rotate(180)' : ''}`).attr('text-anchor', d => d.x < Math.PI ? 'start' : 'end').attr('dy', '0.32em').attr('fill', d => d.depth === 1 ? ownerColors[d.data.holder] : '#cbd5e1').attr('font-size', d => d.children ? '13px' : '11px').text(d => d.data.name).append('title').text(radialNodeDescription);
+      group.append('g').selectAll('text').data(root.descendants().slice(1)).join('text').attr('class', d => d.depth === 1 ? `holder-label holder-${d.data.holder}` : 'category-label').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y + 8},0)${d.x >= Math.PI ? ' rotate(180)' : ''}`).attr('text-anchor', d => d.x < Math.PI ? 'start' : 'end').attr('dy', '0.32em').attr('fill', d => d.depth === 1 ? ownerColors[d.data.holder] : '#cbd5e1').attr('font-size', d => d.children ? '13px' : '11px').text(d => d.data.name).append('title').text(radialNodeDescription);
       group.selectAll('text').filter(d => !d.children).on('mouseover', showRadialTooltip).on('mousemove', moveTooltip).on('mouseout', hideTooltip);
       group.selectAll('circle').filter(d => !d.children).on('mouseover', showRadialTooltip).on('mousemove', moveTooltip).on('mouseout', hideTooltip);
     }
@@ -248,6 +269,17 @@
     }
     function moveTooltip(event) { d3.select('#tooltip').style('left', event.clientX + 'px').style('top', event.clientY + 'px'); }
     function hideTooltip() { d3.select('#tooltip').style('opacity', 0); }
+    const themeToggle = document.getElementById('theme-toggle');
+    function setTheme(theme) {
+      const isLight = theme === 'light';
+      document.body.classList.toggle('light-theme', isLight);
+      themeToggle.textContent = isLight ? 'Modo oscuro' : 'Modo claro';
+      themeToggle.setAttribute('aria-label', isLight ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro');
+      themeToggle.setAttribute('aria-pressed', String(isLight));
+      localStorage.setItem('tp1-theme', theme);
+    }
+    setTheme(localStorage.getItem('tp1-theme') === 'light' ? 'light' : 'dark');
+    themeToggle.addEventListener('click', () => setTheme(document.body.classList.contains('light-theme') ? 'dark' : 'light'));
     d3.selectAll('.filter-button').on('click', function() { selectedHolder = this.dataset.holder; d3.selectAll('.filter-button').attr('aria-pressed', function() { return this.dataset.holder === selectedHolder ? 'true' : 'false'; }); renderAllCharts(); });
     let resizeTimer;
     window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderAllCharts(); }, 150); });
