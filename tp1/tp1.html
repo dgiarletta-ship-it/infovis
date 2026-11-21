@@ -57,9 +57,9 @@
         <h2 class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">EVOLUCIÓN MENSUAL DE CONSUMOS</h2>
         <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">El streamgraph muestra la evolución mensual de los consumos por categoría del titular elegido en el filtro general. Al seleccionar “Todos”, suma los consumos de Diego e Ivanna; al elegir un titular, muestra solo sus consumos. Los montos se expresan en miles y las devoluciones se muestran por su magnitud.</p>
         <div id="chart-total" class="chart-area relative w-full"></div>
+        <div class="mt-4 rounded-xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6"><h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-300 sm:text-base">FILTRO UNIFICADO DE CATEGORÍAS</h2><div id="legend-container" class="flex flex-wrap gap-2 text-sm"></div></div>
       </section>
     </div>
-    <section class="rounded-2xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6"><h2 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-300 sm:text-base">Leyenda unificada de categorías</h2><div id="legend-container" class="flex flex-wrap gap-2 text-sm"></div></section>
   </main>
   <div id="tooltip" class="fixed z-50 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-700 bg-slate-900/95 p-3 text-sm text-slate-100 opacity-0 shadow-2xl backdrop-blur-md"><div class="mb-1 flex items-center gap-2"><span id="tt-color" class="inline-block h-3 w-3 rounded-full"></span><span id="tt-category" class="text-base font-bold text-white"></span></div><div id="tt-period" class="text-slate-300"></div><div id="tt-value" class="mt-1 font-semibold text-slate-100"></div><div class="mt-1 text-xs italic text-slate-400">Haz clic para seleccionar</div></div>
   <script>
