@@ -35,16 +35,19 @@
     body.light-theme #chart-total svg .tick text { fill: #334155 !important; }
     body.light-theme .filter-button[aria-pressed="true"] { background: #cbd5e1; color: #0f172a; }
     @media print {
-      @page { size: landscape; margin: 12mm; }
-      body, body.light-theme { background: #fff !important; color: #111827 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      header { position: static !important; background: #fff !important; color: #111827 !important; border-color: #cbd5e1 !important; }
+      @page { size: A4 landscape; margin: 10mm; }
+      html, body { width: auto !important; min-width: 0 !important; background: #fff !important; color: #111827 !important; font-size: 10pt; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      header { position: static !important; padding: 0 0 5mm !important; background: #fff !important; color: #111827 !important; border-color: #cbd5e1 !important; }
       main { max-width: none !important; padding: 0 !important; }
-      main section, article, #card-total > div { background: #fff !important; border-color: #cbd5e1 !important; box-shadow: none !important; break-inside: avoid; }
+      main section, article, #card-total > div { background: #fff !important; border-color: #cbd5e1 !important; box-shadow: none !important; }
       main section, article, main p, main h2, main h3 { color: #111827 !important; }
+      main section { break-inside: auto; }
+      article, #chart-monthly-total, #chart-total, #radial-chart, #participation-chart, #legend-container { break-inside: avoid; }
+      h2, h3 { break-after: avoid; }
       #theme-toggle, #pdf-export, [aria-label="Filtrar los gráficos por titular"], #tooltip, #dataset-status { display: none !important; }
       #charts-wrapper { display: block !important; }
-      .chart-area { height: 17rem; break-inside: avoid; }
-      #participation-chart, #radial-chart, #chart-monthly-total, #chart-total { break-inside: avoid; }
+      .chart-area { height: 150mm; max-height: 150mm; break-inside: avoid; }
+      #radial-chart svg, #participation-chart svg, #chart-monthly-total svg, #chart-total svg { max-width: 100% !important; }
       #radial-chart svg text, #participation-chart svg text, #chart-monthly-total svg text, #chart-total svg .tick text { fill: #111827 !important; }
       #radial-chart svg path { stroke: #94a3b8 !important; }
       #chart-monthly-total svg .tick line, #chart-total svg .tick line { stroke: #cbd5e1 !important; }
