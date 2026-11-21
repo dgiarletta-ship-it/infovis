@@ -126,6 +126,19 @@
       for (const row of positiveRows()) { const key = `${row.holder}\u0000${row.category}`; totals.set(key, (totals.get(key) || 0) + row.amount); }
       return totals;
     }
+    function formatAmount(value) { return (value || 0).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+    function radialNodeDescription(node) {
+      if (node.children) return node.data.name;
+      return `${node.data.name} — ${ownerLabels[node.data.holder]}: ${formatAmount(node.data.value)} miles`;
+    }
+    function showRadialTooltip(event, node) {
+      d3.select('#tt-color').style('background-color', ownerColors[node.data.holder]);
+      d3.select('#tt-category').text(node.data.name);
+      d3.select('#tt-period').text(`Titular: ${ownerLabels[node.data.holder]}`);
+      d3.select('#tt-value').text(`Monto: ${formatAmount(node.data.value)} miles`);
+      d3.select('#tooltip').style('opacity', 1);
+      moveTooltip(event);
+    }
     function renderRadialChart(totals, visibleHolders, chartCategories) {
       const container = d3.select('#radial-chart').html(''), width = 760, height = 560, radius = 218;
       if (!chartCategories.length || !visibleHolders.length) return;
@@ -135,8 +148,10 @@
       const svg = container.append('svg').attr('class', 'comparison-svg').attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img').attr('aria-label', 'Gráfico jerárquico radial de montos por titular y categoría');
       const group = svg.append('g').attr('transform', `translate(${width / 2},${height / 2})`);
       group.append('g').attr('fill', 'none').attr('stroke', '#64748b').attr('stroke-opacity', 0.42).selectAll('path').data(root.links()).join('path').attr('d', d3.linkRadial().angle(d => d.x).radius(d => d.y));
-      group.append('g').selectAll('circle').data(root.descendants().slice(1)).join('circle').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`).attr('r', d => d.children ? 3 : 4).attr('fill', d => ownerColors[d.data.holder] || '#94a3b8').append('title').text(d => d.children ? d.data.name : `${d.data.name} — ${ownerLabels[d.data.holder]}: ${(d.data.value || 0).toLocaleString('es-AR')} miles`);
-      group.append('g').selectAll('text').data(root.descendants().slice(1)).join('text').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y + 7},0)${d.x >= Math.PI ? ' rotate(180)' : ''}`).attr('text-anchor', d => d.x < Math.PI ? 'start' : 'end').attr('dy', '0.32em').attr('fill', d => d.children ? '#e2e8f0' : '#cbd5e1').attr('font-size', d => d.children ? '10px' : '8px').text(d => d.data.name).append('title').text(d => d.data.name);
+      group.append('g').selectAll('circle').data(root.descendants().slice(1)).join('circle').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`).attr('r', d => d.children ? 3 : 4).attr('fill', d => ownerColors[d.data.holder] || '#94a3b8').append('title').text(radialNodeDescription);
+      group.append('g').selectAll('text').data(root.descendants().slice(1)).join('text').attr('transform', d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y + 7},0)${d.x >= Math.PI ? ' rotate(180)' : ''}`).attr('text-anchor', d => d.x < Math.PI ? 'start' : 'end').attr('dy', '0.32em').attr('fill', d => d.children ? '#e2e8f0' : '#cbd5e1').attr('font-size', d => d.children ? '10px' : '8px').text(d => d.data.name).append('title').text(radialNodeDescription);
+      group.selectAll('text').filter(d => !d.children).on('mouseover', showRadialTooltip).on('mousemove', moveTooltip).on('mouseout', hideTooltip);
+      group.selectAll('circle').filter(d => !d.children).on('mouseover', showRadialTooltip).on('mousemove', moveTooltip).on('mouseout', hideTooltip);
     }
     function renderParticipationChart(totals, visibleHolders, chartCategories) {
       const container = d3.select('#participation-chart').html(''), width = Math.max(360, container.node().clientWidth), margin = { top: 24, right: 48, bottom: 42, left: 164 }, rowHeight = 30, height = margin.top + margin.bottom + chartCategories.length * rowHeight;
