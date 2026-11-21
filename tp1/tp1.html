@@ -13,10 +13,7 @@
     .stream-path { cursor: pointer; transition: opacity .25s ease, filter .25s ease; }
     .stream-path:hover { filter: brightness(1.15); }
     #tooltip { pointer-events: none; transition: opacity .15s ease; }
-    .chart-area { height: 20rem; }
-    .flourish-version--light { display: none; }
-    body.light-theme .flourish-version--dark { display: none; }
-    body.light-theme .flourish-version--light { display: block; }
+    .chart-area { height: 20rem; }     .flourish-version--light { display: none; }     body.light-theme .flourish-version--dark { display: none; }     body.light-theme .flourish-version--light { display: block; }
     .comparison-svg { display: block; width: 100%; height: auto; }
     .filter-button[aria-pressed="true"] { background: #e2e8f0; color: #0f172a; border-color: #e2e8f0; }
     #theme-toggle, #pdf-export { background: #1e293b; color: #f8fafc; border: 1px solid #475569; }
@@ -45,7 +42,7 @@
       main section, article, #card-total > div { background: #fff !important; border-color: #cbd5e1 !important; box-shadow: none !important; }
       main section, article, main p, main h2, main h3 { color: #111827 !important; }
       main section { break-inside: auto; }
-      article, #chart-total, #radial-chart, #participation-chart, #legend-container, #flourish-monthly-chart .flourish-embed, #powerbi-summary-chart iframe { break-inside: avoid; }
+      article, #chart-total, #radial-chart, #participation-chart, #legend-container, #flourish-monthly-chart .flourish-embed { break-inside: avoid; }
       h2, h3 { break-after: avoid; }
       #theme-toggle, #pdf-export, [aria-label="Filtrar los gráficos por titular"], #tooltip, #dataset-status { display: none !important; }
       #charts-wrapper { display: block !important; }
@@ -54,132 +51,4 @@
       #radial-chart svg text, #participation-chart svg text, #chart-total svg .tick text { fill: #111827 !important; }
       #radial-chart svg path { stroke: #94a3b8 !important; }
       #chart-total svg .tick line { stroke: #cbd5e1 !important; }
-      #legend-container button { background: #fff !important; color: #111827 !important; border-color: #cbd5e1 !important; }
-      #legend-container button span { color: #111827 !important; }
-    }
-    @media (max-width: 640px) { .chart-area { height: 17rem; } }
-  </style>
-</head>
-<body class="min-h-screen bg-slate-950 text-slate-100">
-  <header class="sticky top-0 z-30 border-b border-slate-800 bg-slate-900/90 px-4 py-4 backdrop-blur sm:px-8">
-    <div class="mx-auto max-w-screen-2xl">
-      <h1 class="bg-gradient-to-r from-pink-400 via-purple-300 to-indigo-400 bg-clip-text text-xl font-bold text-transparent sm:text-2xl">Trabajo Práctico 1</h1>
-      <p class="text-xs text-slate-400 sm:text-sm">Análisis de compras con tarjeta de crédito (agosto de 2025 – agosto de 2026)</p>
-      <p class="mt-1 text-xs font-medium text-slate-300 sm:text-sm">Alumno: Diego Hernán Giarletta</p>
-      <div class="mt-3 flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <p class="max-w-3xl text-sm leading-relaxed text-slate-300"><strong class="font-semibold text-slate-100">Objetivo:</strong> El siguiente reporte presenta el detalle de los consumos con tarjeta de crédito desde agosto de 2025 hasta agosto de 2026, agrupados por mes de operación.</p>
-        <div class="flex shrink-0 flex-col items-start gap-2 sm:items-end">
-          <button id="theme-toggle" type="button" class="rounded-lg px-3 py-2 text-sm font-semibold transition hover:opacity-80" aria-label="Cambiar a modo claro" aria-pressed="false">Modo claro</button>
-          <button id="pdf-export" type="button" class="rounded-lg px-3 py-2 text-sm font-semibold transition hover:opacity-80" aria-label="Exportar el informe a PDF">Exportar a PDF</button>
-        </div>
-      </div>
-    </div>
-  </header>
-  <main class="mx-auto w-full max-w-none space-y-6 p-4 sm:p-6 lg:p-8">
-    <section aria-labelledby="current-situation-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-      <h2 id="current-situation-title" class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">SITUACIÓN ACTUAL DE LOS CONSUMOS</h2>
-      <p class="mb-5 max-w-5xl text-sm leading-relaxed text-slate-300">Durante el período analizado se registraron 560 transacciones. Diego H. Giarletta concentra el 57,30 % de los gastos positivos e Ivanna I. Geronovycz el 42,70 %. Los porcentajes se calculan sobre el gasto positivo total de ambos titulares; las bonificaciones y devoluciones se excluyen.</p>
-      <div class="grid gap-4 md:grid-cols-2">
-        <article class="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4"><h3 class="text-base font-bold" style="color: #38BDF8">DIEGO H. GIARLETTA</h3><p class="mt-1 text-sm text-slate-300"><span class="font-semibold text-white">310 transacciones</span> · 57,30 % del gasto positivo total</p><p class="mt-2 text-sm leading-relaxed text-slate-300">Sus consumos se concentran principalmente en comida, servicios (luz y gas), telefonía y combustible.</p></article>
-        <article class="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4"><h3 class="text-base font-bold" style="color: #FF4000">IVANNA I. GERONOVYCZ</h3><p class="mt-1 text-sm text-slate-300"><span class="font-semibold text-white">250 transacciones</span> · 42,70 % del gasto positivo total</p><p class="mt-2 text-sm leading-relaxed text-slate-300">Sus consumos se concentran principalmente en ropa, comida y transporte.</p></article>
-      </div>
-    </section>
-    <section aria-labelledby="comparison-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-      <h2 id="comparison-title" class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">COMPARACIÓN DE CONSUMOS POR TITULAR</h2>
-      <p class="mb-5 max-w-5xl text-sm leading-relaxed text-slate-300">El gráfico radial organiza los consumos por titular y categoría, y el gráfico de barras compara el porcentaje de participación de cada categoría en los gastos positivos de ambos titulares. El filtro se aplica a los tres gráficos al mismo tiempo.</p>
-      <div class="mb-6 flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar los gráficos por titular">
-        <span class="mr-1 text-sm font-medium text-slate-300">Titular:</span>
-        <button type="button" class="filter-button rounded-lg border border-slate-600 px-3 py-1.5 text-sm text-slate-200" data-holder="all" aria-pressed="true">Todos</button>
-        <button type="button" class="filter-button rounded-lg border border-slate-600 px-3 py-1.5 text-sm" style="color: #38BDF8" data-holder="diego" aria-pressed="false">Diego</button>
-        <button type="button" class="filter-button rounded-lg border border-slate-600 px-3 py-1.5 text-sm" style="color: #FF4000" data-holder="ivanna" aria-pressed="false">Ivanna</button>
-      </div>
-      <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
-        <div class="min-w-0"><h3 class="mb-3 text-base font-bold text-slate-200 sm:text-lg">GRÁFICO JERÁRQUICO RADIAL</h3><div id="radial-chart" aria-label="Gráfico jerárquico radial"></div></div>
-        <div class="min-w-0"><h3 class="mb-3 text-base font-bold text-slate-200 sm:text-lg">PARTICIPACIÓN POR CATEGORÍA Y TITULAR</h3><div id="participation-chart" aria-label="Participación porcentual por categoría y titular"></div></div>
-      </div>
-    </section>
-    <p id="dataset-status" role="status" class="rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-sm text-slate-300">Cargando datos de la planilla…</p>
-    <div id="charts-wrapper" class="space-y-6">
-      <section id="card-total" class="relative rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-        <h2 class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">EVOLUCIÓN MENSUAL DE CONSUMOS</h2>
-        <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">El gráfico de áreas muestra la evolución mensual de los consumos por categoría. Al seleccionar “Todos” en el filtro general, suma los consumos de Diego e Ivanna; al elegir un titular, muestra solo sus consumos. Los montos se expresan en miles e incluyen las devoluciones por su magnitud.</p>
-        <h3 class="mb-2 text-base font-semibold text-slate-200">EVOLUCIÓN POR CATEGORÍA</h3>
-        <div id="chart-total" class="chart-area relative w-full"></div>
-        <div class="mt-4 rounded-xl border border-slate-800/60 bg-slate-900/40 p-4 sm:p-6"><h3 class="mb-3 text-sm font-semibold uppercase tracking-wider text-slate-300 sm:text-base">FILTRO UNIFICADO DE CATEGORÍAS</h3><div id="legend-container" class="flex flex-wrap gap-2 text-sm"></div></div>
-      </section>
-    </div>
-    <section id="category-heatmap-section" aria-labelledby="category-heatmap-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-      <h2 id="category-heatmap-title" class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">FRECUENCIA DE COMPRAS POR CATEGORÍA Y MES</h2>
-      <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">Cada celda muestra la cantidad de transacciones de una categoría en un mes. El color va de naranja claro (pocas compras) a rojo intenso (muchas); las celdas vacías indican que no hubo transacciones.</p>
-      <div id="category-heatmap-chart" aria-label="Mapa de calor de transacciones por categoría y mes"></div>
-    </section>
-    <section id="flourish-monthly-chart" aria-labelledby="flourish-monthly-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-      <h2 id="flourish-monthly-title" class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">MONTO TOTAL POR MES</h2>
-      <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">Visualización de Flourish con los montos mensuales del archivo <a class="underline" href="./gasto_mensual_flourish.csv">gasto_mensual_flourish.csv</a>. Este gráfico muestra las series del archivo y no cambia con el filtro general de titulares.</p>
-      <div class="flourish-embed flourish-chart flourish-version--dark" data-src="visualisation/30990651"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/30990651/thumbnail" width="100%" alt="Gráfico del monto total por mes" /></noscript></div>
-      <div class="flourish-version--light" style="width: 100%; height: 600px;"><iframe src="https://flo.uri.sh/visualisation/30990783/embed?auto=1" title="Gráfico del monto total por mes (modo claro)" style="width: 100%; height: 600px; border: 0;" loading="lazy" allowfullscreen></iframe></div>
-      <div class="flourish-fallback" data-for="visualisation/30990651"><a href="https://public.flourish.studio/visualisation/30990651/visualisation.json?ref=embed-script">https://public.flourish.studio/visualisation/30990651/visualisation.json?ref=embed-script</a></div>
-    </section>
-    <section id="powerbi-summary-chart" aria-labelledby="powerbi-summary-title" class="rounded-2xl border border-slate-800/80 bg-slate-900/50 p-4 shadow-xl sm:p-6">
-      <h2 id="powerbi-summary-title" class="mb-3 text-lg font-bold text-slate-200 sm:text-xl">SUMATORIA DE CONSUMOS POR USUARIO DE TARJETAS</h2>
-      <p class="mb-4 max-w-5xl text-sm leading-relaxed text-slate-300">Visualización interactiva en Power BI con la sumatoria de consumos por titular de tarjeta. Este gráfico mantiene sus propios filtros internos dentro del reporte de Power BI.</p>
-      <div class="w-full overflow-hidden rounded-xl border border-slate-800/80 bg-slate-950/60">
-        <iframe title="Sumatoria Consumos por Usuario de Tarjetas" class="h-[373.5px] w-full sm:h-[480px]" src="https://app.powerbi.com/view?r=eyJrIjoiN2ZmYjIyNTQtMjhmZC00ZjAwLThjMWMtY2NiNjlkZjRlNjA1IiwidCI6ImExZjUwYTk3LTIxYzAtNDlhNy1hOWQ0LWYyNDRlYmI0MmRhNyIsImMiOjR9" frameborder="0" allowFullScreen="true" loading="lazy"></iframe>
-      </div>
-    </section>
-  </main>
-  <div id="tooltip" class="fixed z-50 -translate-x-1/2 -translate-y-full rounded-xl border border-slate-700 bg-slate-900/95 p-3 text-sm text-slate-100 opacity-0 shadow-2xl backdrop-blur-md"><div class="mb-1 flex items-center gap-2"><span id="tt-color" class="inline-block h-3 w-3 rounded-full"></span><span id="tt-category" class="text-base font-bold text-white"></span></div><div id="tt-period" class="text-slate-300"></div><div id="tt-value" class="mt-1 font-semibold text-slate-100"></div><div class="mt-1 text-xs italic text-slate-400">Haz clic para seleccionar</div></div>
-  <script src="./category-heatmap.js"></script>
-  <script>
-    const workbookUrl = './gastosdetarjetamensual_Final.xlsx';
-    const categoryColors = d3.scaleOrdinal(d3.schemeTableau10);
-    const ownerColors = { diego: '#38BDF8', ivanna: '#FF4000' };
-    const ownerLabels = { diego: 'Diego H. Giarletta', ivanna: 'Ivanna I. Geronovycz' };
-    let periods = [], categories = [], records = [], chartData = [], selectedCategory = null, selectedHolder = 'all';
-    function normalizeText(value) { return String(value ?? '').normalize('NFC').trim().replace(/\s+/g, ' '); }
-    function normalizeCategory(value) { return normalizeText(value).replace(/\s+(?:Diego|Ivanna)$/i, '').trim(); }
-    function monthOrder(period) { const [month, year] = period.split('/').map(Number); return year * 12 + month; }
-    function parseOperationDate(value, rowNumber) {
-      const match = normalizeText(value).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-      if (!match) throw new Error(`Fila ${rowNumber}: fecha de operación inválida.`);
-      const [, dayText, monthText, yearText] = match, day = Number(dayText), month = Number(monthText), year = Number(yearText), date = new Date(Date.UTC(year, month - 1, day));
-      if (date.getUTCFullYear() !== year || date.getUTCMonth() !== month - 1 || date.getUTCDate() !== day) throw new Error(`Fila ${rowNumber}: fecha de operación inválida.`);
-      return { operationDate: `${dayText}/${monthText}/${yearText}`, period: `${monthText}/${yearText}` };
-    }
-    function ownerFromCell(value) {
-      const owner = normalizeText(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
-      if (owner.includes('GIARLETTA') || owner.includes('DIEGO')) return 'diego';
-      if (owner.includes('GERONOVYCZ') || owner.includes('SONIA') || owner.includes('IVANNA')) return 'ivanna';
-      throw new Error(`Titular no reconocido en la planilla: ${value}`);
-    }
-    function aggregateRows(rows) {
-      const totals = new Map();
-      for (const row of rows) { const key = `${row.period}\u0000${row.category}`; totals.set(key, (totals.get(key) || 0) + Math.abs(row.amount)); }
-      return periods.map(period => { const result = { period }; for (const category of categories) result[category] = totals.get(`${period}\u0000${category}`) || 0; return result; });
-    }
-    async function loadWorkbook() {
-      const status = document.getElementById('dataset-status');
-      try {
-        const response = await fetch(workbookUrl);
-        if (!response.ok) throw new Error(`No se pudo descargar la planilla (HTTP ${response.status}).`);
-        const workbook = XLSX.read(await response.arrayBuffer(), { type: 'array' }), sheet = workbook.Sheets[workbook.SheetNames[0]];
-        if (!sheet) throw new Error('La planilla no contiene hojas con datos.');
-        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
-        records = rows.slice(1).filter(row => row.some(value => value !== '')).map((row, index) => {
-          const rowNumber = index + 2, { operationDate, period } = parseOperationDate(row[0], rowNumber), holder = ownerFromCell(row[1]), category = normalizeCategory(row[4]), amount = Number(row[5]);
-          if (!category || !Number.isFinite(amount)) throw new Error(`Fila ${rowNumber}: categoría o monto inválido.`);
-          return { operationDate, period, holder, category, amount };
-        });
-        if (!records.length) throw new Error('La planilla no contiene transacciones para mostrar.');
-        const categoryLabels = new Map();
-        for (const row of records) {
-          const key = row.category.toLocaleLowerCase('es'), previous = categoryLabels.get(key);
-          if (!previous || (previous[0] === previous[0].toLocaleLowerCase('es') && row.category[0] !== row.category[0].toLocaleLowerCase('es'))) categoryLabels.set(key, row.category);
-        }
-        for (const row of records) row.category = categoryLabels.get(row.category.toLocaleLowerCase('es'));
-        periods = [...new Set(records.map(row => row.period))].sort((a, b) => monthOrder(a) - monthOrder(b));
-        categories = [...new Set(records.map(row => row.category))].sort((a, b) => a.localeCompare(b, 'es'));
-        categoryColors.domain(categories);
-        chartData = aggregateRows(records);
-        buildLegend(); renderAllCharts(); status.classList.add('hidden');
-      } catch (error)
+      #legend-container button { background: #fff !important; color: #11182
